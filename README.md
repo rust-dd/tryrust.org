@@ -12,6 +12,11 @@ This is a template for use with the [Leptos](https://github.com/leptos-rs/leptos
 If you don't have `cargo-leptos` installed you can install it with
 
 ```bash
+npx tailwindcss -i input.css -o ./style/output.css --watch
+```
+
+
+```bash
 cargo install cargo-leptos --locked
 ```
 
@@ -85,6 +90,3 @@ LEPTOS_RELOAD_PORT="3001"
 ```
 Finally, run the server binary.
 
-## Licensing
-
-This template itself is released under the Unlicense. You should replace the LICENSE for your own application with an appropriate license if you plan to release it publicly.
