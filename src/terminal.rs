@@ -28,7 +28,7 @@ pub fn Terminal() -> impl IntoView {
             <div  class="flex-1 p-4 font-mono text-[#c6c6c6] text-sm leading-relaxed overflow-auto">
                 <div class="flex items-center">
                 <span>$</span>
-                <Show when=move || {is_compiling() == true} fallback=move || view! {
+                <Show when=is_compiling fallback=move || view! {
                     <input
                     _ref=input_ref
                     r#type="text"
