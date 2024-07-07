@@ -1,7 +1,10 @@
+#![feature(never_type)]
+
 pub mod app;
 #[cfg(feature = "ssr")]
 pub mod fileserv;
 pub mod instruction;
+pub mod server;
 pub mod terminal;
 
 #[cfg(feature = "hydrate")]
