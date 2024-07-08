@@ -3,7 +3,6 @@ use std::collections::BTreeMap;
 use html::Input;
 use leptos::*;
 use leptos_use::{storage::use_session_storage, use_event_listener, utils::FromToStringCodec};
-use logging::log;
 
 use crate::server::compile::compile;
 
