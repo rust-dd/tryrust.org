@@ -1,7 +1,7 @@
 use leptos::{server, ServerFnError};
 
 #[server]
-pub async fn compile(session_id: String) -> Result<String, ServerFnError> {
+pub async fn compile(session_id: String, code: String) -> Result<String, ServerFnError> {
     use std::process::Stdio;
     use tokio::process::Command;
 

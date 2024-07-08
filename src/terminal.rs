@@ -12,11 +12,12 @@ pub fn Terminal() -> impl IntoView {
     let (stale, set_stale) = create_signal(true);
     let input_ref = create_node_ref::<Input>();
     let (session_id, ..) = use_session_storage::<String, FromToStringCodec>("session_id");
-    let compile_code = create_action(move |session_id: &String| {
+    let compile_code = create_action(move |(session_id, code): &(String, String)| {
         set_stale(false);
         let session_id = session_id.clone();
+        let code = code.clone();
         async move {
-            let response = compile(session_id.clone())
+            let response = compile(session_id.clone(), code.clone())
                 .await
                 .expect("Failed to compile");
             responses.update(|prev| {
@@ -35,7 +36,7 @@ pub fn Terminal() -> impl IntoView {
             commands.update(|prev| {
                 prev.push(code());
             });
-            compile_code.dispatch(session_id());
+            compile_code.dispatch((session_id(), code()));
         }
     });
 
