@@ -15,3 +15,5 @@ playwright/.cache/
 sessions/
 
 style/output.css
+
+.idea/
