@@ -42,11 +42,9 @@ pub fn Terminal() -> impl IntoView {
         }
     });
 
-    // create_effect(move |_| log!("Terminal component mounted {:?}", data.get()));
-
     view! {
-        <div class="w-[600px] h-[400px] relative bg-[#2b2b2b] rounded-l-xl overflow-hidden">
-            <div class="flex items-center justify-between px-4 py-2 bg-[#3c3c3c] border-b border-[#4d4d4d]">
+        <div class="flex flex-col max-w-[600px] w-full h-[400px] relative bg-[#2b2b2b] rounded-xl md:rounded-l-xl">
+            <div class="flex items-center rounded-t-xl justify-between px-4 py-2 bg-[#3c3c3c] border-b border-[#4d4d4d] md:rounded-tl-xl md:rounded-tr-none">
                 <div class="flex items-center gap-2">
                 <div class="w-3 h-3 rounded-full bg-[#ff5f56]" />
                 <div class="w-3 h-3 rounded-full bg-[#ffbd2e]" />
@@ -72,7 +70,6 @@ pub fn Terminal() -> impl IntoView {
                     <input
                         _ref=input_ref
                         name="code"
-                        disabled=move || compile_code.pending()()
                         r#type="text"
                         autocomplete="off"
                         class="w-full py-1 px-2 bg-transparent border-none outline-none text-[#c6c6c6] caret-[#ffef5c]"
