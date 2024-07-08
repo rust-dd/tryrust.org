@@ -24,6 +24,7 @@ leptos-use = { version = "0.10.10" }
 tracing-subscriber = "0.3.18"
 chrono = "0.4.38"
 tokio-cron-scheduler = "0.10.2"
+regex = "1.10.5"
 
 [features]
 hydrate = ["leptos/hydrate", "leptos_meta/hydrate", "leptos_router/hydrate"]

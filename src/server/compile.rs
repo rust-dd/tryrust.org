@@ -4,33 +4,52 @@ use leptos::{server, ServerFnError};
 pub async fn compile(session_id: String, code: String) -> Result<String, ServerFnError> {
     use std::process::Stdio;
     use tokio::process::Command;
+    use regex::Regex;
+    use std::fs;
+
+    let file_path = format!("./sessions/{}/src/main.rs", session_id);
+    let backup_path = format!("./sessions/{}/src/main.rs.bak", session_id);
+
+    let _ = fs::copy(&file_path, &backup_path).map_err(|e| {
+        tracing::error!("Error creating backup: {:?}", e);
+        ServerFnError::new("Error creating backup")
+    });
+
+    let command = format!(
+        "sed -i '$i\\{0}' {1} && cargo run --manifest-path ./sessions/{2}/Cargo.toml -- --name tryrust-{2}",
+        code, file_path, session_id
+    );
 
     let mut cmd = Command::new("sh");
-    cmd.args([
-        "-c",
-        &format!(
-            "cargo run --manifest-path ./sessions/{0}/Cargo.toml -- --name tryrust-{0}",
-            session_id
-        ),
-    ])
-    .stdout(Stdio::piped())
-    .stderr(Stdio::piped());
+    cmd.arg("-c")
+        .arg(&command)
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped());
 
     let output = cmd.output().await.map_err(|e| {
-        tracing::info!("Error compiling session: {:?}", e);
-        ServerFnError::new("Error compiling session")
+        tracing::error!("Error executing command: {:?}", e);
+        ServerFnError::new("Error executing command")
     })?;
 
     tracing::info!("cmd: {:?}", cmd);
-
     if !output.status.success() {
-        tracing::error!(
-            "Command failed with status: {}",
-            String::from_utf8_lossy(&output.stderr)
-        );
-        return Err(ServerFnError::ServerError(
-            "Failed to compile project".into(),
-        ));
+        let _ = fs::copy(&backup_path, &file_path).map_err(|e| {
+            tracing::error!("Error creating backup: {:?}", e);
+            ServerFnError::new("Error creating backup")
+        });
+
+        let cargo_stderr = String::from_utf8_lossy(&output.stderr);
+        let re = Regex::new(r"error.+").unwrap();
+        let errors: Vec<&str> = re.find_iter(&cargo_stderr).map(|mat| mat.as_str()).collect();
+        tracing::info!("Cargo error: {}", cargo_stderr);
+        if !errors.is_empty() {
+            let error_messages = errors.join("\n");
+            tracing::info!("Command failed with errors: {}", error_messages);
+            return Ok(error_messages);
+        } else {
+            tracing::info!("Command failed with unrecognized errors: {}", cargo_stderr);
+            return Ok(cargo_stderr.to_string());
+        }
     }
 
     Ok(String::from_utf8_lossy(&output.stdout).to_string())
