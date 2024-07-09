@@ -2,10 +2,10 @@ use leptos::{server, ServerFnError};
 
 #[server]
 pub async fn compile(session_id: String, code: String) -> Result<String, ServerFnError> {
-    use std::process::Stdio;
-    use tokio::process::Command;
     use regex::Regex;
     use std::fs;
+    use std::process::Stdio;
+    use tokio::process::Command;
 
     let file_path = format!("./sessions/{}/src/main.rs", session_id);
     let backup_path = format!("./sessions/{}/src/main.rs.bak", session_id);
@@ -15,10 +15,19 @@ pub async fn compile(session_id: String, code: String) -> Result<String, ServerF
         ServerFnError::new("Error creating backup")
     });
 
-    let command = format!(
-        "sed -i '$i\\{0}' {1} && cargo run --manifest-path ./sessions/{2}/Cargo.toml -- --name tryrust-{2}",
-        code, file_path, session_id
-    );
+    let mut command = String::new();
+
+    if cfg!(target_os = "linux") {
+        command = format!(
+            "sed -i '$i\\{0}' {1} && cargo run --manifest-path ./sessions/{2}/Cargo.toml -- --name tryrust-{2}",
+            code, file_path, session_id
+        );
+    } else if cfg!(target_os = "macos") {
+        command = format!(
+            "gsed -i '$i\\{0}' {1} && cargo run --manifest-path ./sessions/{2}/Cargo.toml -- --name tryrust-{2}",
+            code, file_path, session_id
+        );
+    }
 
     let mut cmd = Command::new("sh");
     cmd.arg("-c")
@@ -40,7 +49,10 @@ pub async fn compile(session_id: String, code: String) -> Result<String, ServerF
 
         let cargo_stderr = String::from_utf8_lossy(&output.stderr);
         let re = Regex::new(r"error.+").unwrap();
-        let errors: Vec<&str> = re.find_iter(&cargo_stderr).map(|mat| mat.as_str()).collect();
+        let errors: Vec<&str> = re
+            .find_iter(&cargo_stderr)
+            .map(|mat| mat.as_str())
+            .collect();
         tracing::info!("Cargo error: {}", cargo_stderr);
         if !errors.is_empty() {
             let error_messages = errors.join("\n");
