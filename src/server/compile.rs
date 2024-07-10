@@ -15,19 +15,18 @@ pub async fn compile(session_id: String, code: String) -> Result<String, ServerF
         ServerFnError::new("Error creating backup")
     });
 
-    let mut command = String::new();
-
-    if cfg!(target_os = "linux") {
-        command = format!(
-            "sed -i '$i\\{0}' {1} && cargo run --manifest-path ./sessions/{2}/Cargo.toml -- --name tryrust-{2}",
-            code, file_path, session_id
-        );
-    } else if cfg!(target_os = "macos") {
-        command = format!(
-            "gsed -i '$i\\{0}' {1} && cargo run --manifest-path ./sessions/{2}/Cargo.toml -- --name tryrust-{2}",
-            code, file_path, session_id
-        );
-    }
+    let sed_command = cfg!(target_os = "macos").then(|| "gsed").unwrap_or("sed");
+    let modified_code = format!("{};", code);
+    let commands = vec![
+        format!("cargo fmt -- {}", file_path),
+        format!("{} -i 's/print/\\/\\/print/g' {}", sed_command, file_path),
+        format!("{} -i '$i\\{}' {}", sed_command, modified_code, file_path),
+        format!(
+            "cargo run --manifest-path ./sessions/{0}/Cargo.toml -- --name tryrust-{0}",
+            session_id
+        ),
+    ];
+    let command = commands.join(" && ");
 
     let mut cmd = Command::new("sh");
     cmd.arg("-c")
