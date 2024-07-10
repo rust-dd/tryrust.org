@@ -1,6 +1,6 @@
 use std::collections::BTreeMap;
 
-use html::Input;
+use html::{Div, Input};
 use leptos::*;
 use leptos_use::{storage::use_session_storage, use_event_listener, utils::FromToStringCodec};
 
@@ -11,6 +11,7 @@ pub fn Terminal() -> impl IntoView {
     let data = create_rw_signal(BTreeMap::<usize, String>::new());
     let (code, set_code) = create_signal(String::new());
     let input_ref = create_node_ref::<Input>();
+    let div_ref = create_node_ref::<Div>();
     let (session_id, ..) = use_session_storage::<String, FromToStringCodec>("session_id");
     let compile_code = create_action(move |(session_id, code): &(String, String)| {
         set_code(String::new());
@@ -53,7 +54,7 @@ pub fn Terminal() -> impl IntoView {
                 <div class="text-[#9e9e9e] text-sm">Terminal</div>
                 <div />
             </div>
-            <div class="flex-1 p-4 font-mono text-[#c6c6c6] text-sm leading-relaxed overflow-auto">
+            <div _ref=div_ref class="flex-1 p-4 font-mono text-[#c6c6c6] text-sm leading-relaxed overflow-auto">
                 <For
                     each=move || data.get().into_iter()
                     key=|(idx, _)| *idx
