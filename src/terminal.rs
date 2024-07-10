@@ -13,10 +13,14 @@ enum TerminalEvent {
     Success,
 }
 
+#[derive(Clone, Copy)]
+pub struct CodeSetter(pub WriteSignal<String>);
+
 #[component]
 pub fn Terminal() -> impl IntoView {
     let data = create_rw_signal(BTreeMap::<(usize, TerminalEvent), String>::new());
     let (code, set_code) = create_signal(String::new());
+    provide_context(CodeSetter(set_code));
     let input_ref = create_node_ref::<Input>();
     let (session_id, ..) = use_session_storage::<String, FromToStringCodec>("session_id");
     let compile_code = create_action(move |(session_id, code): &(String, String)| {
