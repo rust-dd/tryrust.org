@@ -16,15 +16,14 @@ pub async fn compile(session_id: String, code: String) -> Result<String, ServerF
     });
 
     let mut command = String::new();
-
     if cfg!(target_os = "linux") {
         command = format!(
-            "sed -i '$i\\{0}' {1} && cargo run --manifest-path ./sessions/{2}/Cargo.toml -- --name tryrust-{2}",
+            "cargo fmt -- {1} && sed -i '$i\\{0}' {1} && cargo run --manifest-path ./sessions/{2}/Cargo.toml -- --name tryrust-{2}",
             code, file_path, session_id
         );
     } else if cfg!(target_os = "macos") {
         command = format!(
-            "gsed -i '$i\\{0}' {1} && cargo run --manifest-path ./sessions/{2}/Cargo.toml -- --name tryrust-{2}",
+            "cargo fmt -- {1} && gsed -i '$i\\{0}' {1} && cargo run --manifest-path ./sessions/{2}/Cargo.toml -- --name tryrust-{2}",
             code, file_path, session_id
         );
     }
