@@ -16,12 +16,17 @@ enum TerminalEvent {
 #[derive(Clone, Copy)]
 pub struct CodeSetter(pub WriteSignal<String>);
 
+#[derive(Clone, Copy)]
+pub struct InputRef(pub ReadSignal<NodeRef<Input>>);
+
 #[component]
 pub fn Terminal() -> impl IntoView {
     let data = create_rw_signal(BTreeMap::<(usize, TerminalEvent), String>::new());
     let (code, set_code) = create_signal(String::new());
     provide_context(CodeSetter(set_code));
-    let input_ref = create_node_ref::<Input>();
+    let (r#ref, ..) = create_signal(create_node_ref::<Input>());
+    let _ref = r#ref();
+    provide_context(InputRef(r#ref));
     let (session_id, ..) = use_session_storage::<String, FromToStringCodec>("session_id");
     let compile_code = create_action(move |(session_id, code): &(String, String)| {
         let session_id = session_id.clone();
@@ -30,7 +35,7 @@ pub fn Terminal() -> impl IntoView {
             prev.insert((prev.len(), TerminalEvent::Code), code.clone());
         });
 
-        set_code(String::new());
+        set_code(Default::default());
 
         async move {
             let response = compile(session_id.clone(), code.clone())
@@ -48,14 +53,14 @@ pub fn Terminal() -> impl IntoView {
                 });
             }
 
-            input_ref
+            r#ref()
                 .get()
                 .expect("input_ref should be loaded by now")
                 .scroll_into_view();
         }
     });
 
-    let _ = use_event_listener(input_ref, ev::keydown, move |e| {
+    let _ = use_event_listener(r#ref(), ev::keydown, move |e| {
         if compile_code.pending()() || code().is_empty() {
             return;
         }
@@ -109,7 +114,7 @@ pub fn Terminal() -> impl IntoView {
                 <div class="flex items-center gap-2">
                     <span class="text-[#ffef5c]">$</span>
                     <input
-                        _ref=input_ref
+                        _ref=_ref
                         name="code"
                         r#type="text"
                         autocomplete="off"
