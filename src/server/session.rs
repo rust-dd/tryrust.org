@@ -9,9 +9,9 @@ pub async fn create_session() -> Result<String, ServerFnError> {
     let session_id = now.timestamp_millis().to_string();
     let mut cmd = Command::new("sh");
     cmd.args([
-        "-c",
+        "-c", 
         &format!(
-            "cargo new ./sessions/{0} --bin --name tryrust-{0}",
+            "cargo new ./sessions/{0} --bin --name tryrust-{0} && echo \"[workspace]\" >> ./sessions/{0}/Cargo.toml",
             session_id
         ),
     ])

@@ -23,7 +23,7 @@ pub async fn compile(session_id: String, code: String) -> Result<String, ServerF
             sed_command, file_path
         ),
         format!("{} -i '$i\\{}' {}", sed_command, modified_code, file_path),
-        format!("cargo fmt -- {}", file_path),
+        format!("rustfmt -- {}", file_path),
         format!(
             "cargo run --manifest-path ./sessions/{0}/Cargo.toml -- --name tryrust-{0}",
             session_id

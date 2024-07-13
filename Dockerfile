@@ -1,48 +1,48 @@
-# Get started with a build env with Rust nightly
-FROM rustlang/rust:nightly-bullseye as builder
+# Stage 1: Build Environment with Rust nightly on Alpine
+FROM rustlang/rust:nightly-alpine as builder
 
-# Install cargo-binstall, which makes it easier to install other
-# cargo extensions like cargo-leptos
-RUN wget https://github.com/cargo-bins/cargo-binstall/releases/latest/download/cargo-binstall-x86_64-unknown-linux-musl.tgz
-RUN tar -xvf cargo-binstall-x86_64-unknown-linux-musl.tgz
-RUN cp cargo-binstall /usr/local/cargo/bin
+# Install required packages
+RUN apk update && \
+    apk add --no-cache bash curl npm libc-dev binaryen
+
+# Install SASS globally
+RUN npm install -g tailwindcss
 
 # Install cargo-leptos
-RUN cargo binstall cargo-leptos -y
+RUN curl --proto '=https' --tlsv1.2 -LsSf https://github.com/leptos-rs/cargo-leptos/releases/latest/download/cargo-leptos-installer.sh | sh
 
 # Add the WASM target
 RUN rustup target add wasm32-unknown-unknown
 
-# Make an /app dir, which everything will eventually live in
-RUN mkdir -p /app
-WORKDIR /app
+# Create working directory
+WORKDIR /work
 COPY . .
 
-# Build the app
-RUN cargo leptos build --release -vv 
+# Process Tailwind CSS
+RUN npx tailwindcss -i input.css -o ./style/output.css
 
-FROM debian:bookworm-slim as runtime
+# Build the application
+RUN cargo leptos build --release -vv
+
+# Stage 2: Runtime Environment
+FROM rustlang/rust:nightly-alpine as runner
+
 WORKDIR /app
-RUN apt-get update -y \
-  && apt-get install -y --no-install-recommends openssl ca-certificates \
-  && apt-get autoremove -y \
-  && apt-get clean -y \
-  && rm -rf /var/lib/apt/lists/*
 
-# Copy the server binary to the /app directory
-COPY --from=builder /app/target/release/tryrust /app/
+# Add the rustfmt component in the runtime stage
+RUN rustup component add rustfmt
 
-# /target/site contains our JS/WASM/CSS, etc.
-COPY --from=builder /app/target/site /app/site
+# Copy the server binary and site content from the builder stage
+COPY --from=builder /work/target/release/tryrust /app/
+COPY --from=builder /work/target/site /app/site
+COPY --from=builder /work/Cargo.toml /app/
 
-# Copy Cargo.toml if it’s needed at runtime
-COPY --from=builder /app/Cargo.toml /app/
-
-# Set any required env variables and
+# Set environment variables
 ENV RUST_LOG="info"
 ENV LEPTOS_SITE_ADDR="0.0.0.0:8080"
 ENV LEPTOS_SITE_ROOT="site"
 EXPOSE 8080
+
 
 # Run the server
 CMD ["/app/tryrust"]
