@@ -1,6 +1,6 @@
 use leptos::{server, ServerFnError};
 
-#[server]
+#[server(endpoint = "/compile")]
 pub async fn compile(session_id: String, code: String) -> Result<String, ServerFnError> {
     use regex::Regex;
     use std::fs;

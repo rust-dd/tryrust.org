@@ -1,6 +1,6 @@
 use leptos::{server, ServerFnError};
 
-#[server]
+#[server(endpoint = "/session")]
 pub async fn create_session() -> Result<String, ServerFnError> {
     use std::process::Stdio;
     use tokio::process::Command;
