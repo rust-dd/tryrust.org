@@ -1,5 +1,4 @@
 use crate::{instruction::Instruction, server::session::create_session, terminal::Terminal};
-use html::Input;
 use leptos::*;
 use leptos_meta::*;
 use leptos_use::{storage::use_session_storage, utils::FromToStringCodec};
