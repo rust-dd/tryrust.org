@@ -18,8 +18,8 @@ pub fn Component() -> impl IntoView {
             <div class="flex flex-col gap-2">
                 <h2 class="text-3xl font-bold">Hello, World!</h2>
                 <p class="text-gray-400">
-                    {r#"Create a simple Rust program that prints "Hello, world!" to the console using the"#}
-                    <code class="p-1 bg-gray-700 rounded">println!</code>macro.
+                    {r#"Create a simple Rust program that prints "Hello, world!" to the console using the "#}
+                    <code class="p-1 bg-gray-700 rounded">println!</code>{" macro"}.
                 </p>
                 <pre
                     on:click=move |_| {
