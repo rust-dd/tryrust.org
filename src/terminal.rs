@@ -4,7 +4,10 @@ use html::Input;
 use leptos::*;
 use leptos_use::{storage::use_session_storage, use_event_listener, utils::FromToStringCodec};
 
-use crate::server::compile::compile;
+use crate::{
+    context::{CodeSetter, InputRef},
+    server::compile::compile,
+};
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, PartialOrd, Ord)]
 enum TerminalEvent {
@@ -12,12 +15,6 @@ enum TerminalEvent {
     Error,
     Success,
 }
-
-#[derive(Clone, Copy)]
-pub struct CodeSetter(pub WriteSignal<String>);
-
-#[derive(Clone, Copy)]
-pub struct InputRef(pub ReadSignal<NodeRef<Input>>);
 
 #[component]
 pub fn Terminal() -> impl IntoView {

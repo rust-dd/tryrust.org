@@ -1,6 +1,7 @@
 #![feature(never_type)]
 
 pub mod app;
+pub mod context;
 pub mod exercises;
 #[cfg(feature = "ssr")]
 pub mod fileserv;

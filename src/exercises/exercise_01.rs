@@ -1,6 +1,6 @@
 use leptos::*;
 
-use crate::terminal::{CodeSetter, InputRef};
+use crate::context::{CodeSetter, InputRef};
 
 #[component]
 pub fn Component() -> impl IntoView {

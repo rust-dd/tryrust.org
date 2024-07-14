@@ -1,4 +1,7 @@
-use crate::{instruction::Instruction, server::session::create_session, terminal::Terminal};
+use crate::{
+    context::Progress, instruction::Instruction, server::session::create_session,
+    terminal::Terminal,
+};
 use leptos::*;
 use leptos_meta::*;
 use leptos_use::{storage::use_session_storage, utils::FromToStringCodec};
@@ -6,6 +9,7 @@ use leptos_use::{storage::use_session_storage, utils::FromToStringCodec};
 #[component]
 pub fn App() -> impl IntoView {
     provide_meta_context();
+    provide_context(Progress::default());
     let (_, set_state, ..) = use_session_storage::<String, FromToStringCodec>("session_id");
 
     create_effect(move |_| {
