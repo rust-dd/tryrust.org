@@ -5,6 +5,10 @@ module.exports = {
   },
   theme: {
     extend: {
+      backgroundImage: {
+        "custom-radial":
+          "radial-gradient(37.4% 50% at 75.5% 50%, rgba(255, 239, 92, 0.2) 0%, rgba(255, 239, 92, 0) 100%)",
+      },
       keyframes: {
         blink: {
           "0%, 100%": { opacity: 1 },
