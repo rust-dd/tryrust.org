@@ -76,7 +76,7 @@ pub fn Terminal() -> impl IntoView {
                     <div class="w-3 h-3 rounded-full bg-[#27c93f]"></div>
                 </div>
                 <div class="text-sm text-[#9e9e9e]">Terminal</div>
-                <div></div>
+                <div />
             </div>
             <div class="overflow-auto flex-1 px-4 pt-4 mb-8 font-mono text-sm leading-relaxed text-[#c6c6c6]">
                 <For
@@ -133,7 +133,7 @@ pub fn Terminal() -> impl IntoView {
                         view! { <span class="ml-2 text-sm text-white">Compiling...</span> }
                     }
                 >
-                    <div></div>
+                    <div />
                 </Show>
             </div>
         </div>
