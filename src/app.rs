@@ -34,7 +34,7 @@ pub fn App() -> impl IntoView {
                 <terminal::Component />
                 <instruction::Component />
             </div>
-            <div class="mb-4 md:absolute md:bottom-4 md:left-0 md:right-0 text-center">
+            <div class="mb-4 text-center md:absolute md:right-0 md:left-0 md:bottom-4">
                 <p class="text-gray-400">
                     Powered by <a href="https://github.com/rust-dd" class="text-[#ffbd2e]">
                         Rust-DD

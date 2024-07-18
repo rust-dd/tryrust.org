@@ -76,7 +76,7 @@ pub fn Component() -> impl IntoView {
                         }
                         class="p-4 bg-black bg-opacity-30 rounded-lg transition duration-500 cursor-pointer hover:bg-black hover:bg-opacity-50"
                     >
-                        <code class="font-mono text-left text-sm text-yellow-500">
+                        <code class="font-mono text-sm text-left text-yellow-500">
                             {move || String::from(exercise_02[2])}
                         </code>
                     </pre>

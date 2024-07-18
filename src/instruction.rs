@@ -11,7 +11,7 @@ pub fn Component() -> impl IntoView {
     let Exercises { count, .. } = expect_context::<Exercises>();
 
     view! {
-        <div class="flex justify-between flex-col p-4 w-full h-auto rounded-xl border border-solid md:p-4 max-w-[600px] border-[rgba(255,255,255,0.1)] bg-[#ffef5c14] shadow-[0_11px_12px_rgba(0,0,0,0.5)] md:max-w-[600px] md:h-[540px]">
+        <div class="flex flex-col justify-between p-4 w-full h-auto rounded-xl border border-solid md:p-4 max-w-[600px] border-[rgba(255,255,255,0.1)] bg-[#ffef5c14] shadow-[0_11px_12px_rgba(0,0,0,0.5)] md:max-w-[600px] md:h-[540px]">
             <div class="p-4">
                 <Show when=move || progress.get() == 0>
                     <exercise_01::Component />
@@ -23,7 +23,7 @@ pub fn Component() -> impl IntoView {
                     <exercise_00::Component />
                 </Show>
             </div>
-            <div class="flex items-end justify-end mt-4 flex-row gap-1">
+            <div class="flex flex-row gap-1 justify-end items-end mt-4">
                 <Show when=move || { progress.get() > 0 }>
                     <button
                         on:click=move |_| progress.update(|prev| *prev -= 1)
