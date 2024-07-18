@@ -1,11 +1,12 @@
 use leptos::*;
 
-use crate::context::{CodeSetter, InputRef};
+use crate::context::{CodeSetter, Exercises, InputRef};
 
 #[component]
 pub fn Component() -> impl IntoView {
     let CodeSetter(set_code) = expect_context::<CodeSetter>();
     let InputRef(_ref) = expect_context::<InputRef>();
+    let Exercises { exercise_01, .. } = expect_context::<Exercises>();
 
     view! {
         <div class="flex flex-col gap-4 w-full text-white rounded-lg">
@@ -23,14 +24,12 @@ pub fn Component() -> impl IntoView {
                 </p>
                 <pre
                     on:click=move |_| {
-                        set_code(r#"println!("Hello, world!");"#.to_string());
+                        set_code(exercise_01.to_string());
                         _ref().get().expect("input_ref should be loaded by now").focus().unwrap();
                     }
                     class="p-4 mt-2 bg-black bg-opacity-30 rounded-lg transition duration-500 cursor-pointer hover:bg-black hover:bg-opacity-50"
                 >
-                    <code class="font-mono text-sm text-yellow-500">
-                        {r#"println!("Hello, world!");"#}
-                    </code>
+                    <code class="font-mono text-sm text-yellow-500">{exercise_01}</code>
                 </pre>
             </div>
         </div>

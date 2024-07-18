@@ -1,11 +1,12 @@
-use std::collections::BTreeMap;
+use regex::Regex;
+use std::{collections::BTreeMap, sync::Arc};
 
 use html::Input;
 use leptos::*;
 use leptos_use::{storage::use_session_storage, use_event_listener, utils::FromToStringCodec};
 
 use crate::{
-    context::{CodeSetter, InputRef},
+    context::{CodeSetter, Exercises, InputRef, Progress},
     server::compile::compile,
 };
 
@@ -17,7 +18,8 @@ enum TerminalEvent {
 }
 
 #[component]
-pub fn Terminal() -> impl IntoView {
+pub fn Component() -> impl IntoView {
+    let exercises = Arc::new(expect_context::<Exercises>());
     let data = create_rw_signal(BTreeMap::<(usize, TerminalEvent), String>::new());
     let (code, set_code) = create_signal(String::new());
     provide_context(CodeSetter(set_code));
@@ -25,37 +27,52 @@ pub fn Terminal() -> impl IntoView {
     let _ref = r#ref();
     provide_context(InputRef(r#ref));
     let (session_id, ..) = use_session_storage::<String, FromToStringCodec>("session_id");
-    let compile_code = create_action(move |(session_id, code): &(String, String)| {
-        let session_id = session_id.clone();
-        let code = code.clone();
-        data.update(|prev| {
-            prev.insert((prev.len(), TerminalEvent::Code), code.clone());
-        });
+    let Progress(progress) = expect_context::<Progress>();
+    let compile_code = create_action(
+        move |(session_id, code, exercises): &(String, String, Arc<Exercises>)| {
+            let session_id = session_id.clone();
+            let code = code.clone();
+            let exercise_01 = exercises.exercise_01;
+            let exercise_02 = exercises.exercise_02;
+            let re = Regex::new(r"\d+\.").unwrap();
+            let exercise_02 = re.split(exercise_02).collect::<Vec<&str>>();
+            let exercise_02 = exercise_02[2];
 
-        set_code(Default::default());
+            data.update(|prev| {
+                prev.insert((prev.len(), TerminalEvent::Code), code.clone());
+            });
 
-        async move {
-            let response = compile(session_id.clone(), code.clone())
-                .await
-                .expect("Failed to compile");
+            set_code(Default::default());
 
-            if !response.is_empty() {
-                data.update(|prev| {
-                    let key = if response.contains("error") {
-                        TerminalEvent::Error
-                    } else {
-                        TerminalEvent::Success
-                    };
-                    prev.insert((prev.len(), key), response);
-                });
+            async move {
+                let response = compile(session_id.clone(), code.clone())
+                    .await
+                    .expect("Failed to compile");
+
+                if !response.is_empty() {
+                    data.update(|prev| {
+                        let key = if response.contains("error") {
+                            TerminalEvent::Error
+                        } else {
+                            TerminalEvent::Success
+                        };
+                        prev.insert((prev.len(), key), response);
+                    });
+
+                    if code == exercise_01 && progress.get() == 0 {
+                        progress.update(|prev| *prev += 1);
+                    } else if progress.get() == 1 && code == *exercise_02 {
+                        progress.update(|prev| *prev += 1);
+                    }
+                }
+
+                r#ref()
+                    .get()
+                    .expect("input_ref should be loaded by now")
+                    .scroll_into_view();
             }
-
-            r#ref()
-                .get()
-                .expect("input_ref should be loaded by now")
-                .scroll_into_view();
-        }
-    });
+        },
+    );
 
     let _ = use_event_listener(r#ref(), ev::keydown, move |e| {
         if compile_code.pending()() || code().is_empty() {
@@ -63,7 +80,7 @@ pub fn Terminal() -> impl IntoView {
         }
 
         if e.key() == "Enter" {
-            compile_code.dispatch((session_id(), code()));
+            compile_code.dispatch((session_id(), code(), exercises.clone()));
         }
     });
 

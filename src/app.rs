@@ -1,7 +1,10 @@
 use crate::{
-    context::Progress, instruction::Instruction, server::session::create_session,
-    terminal::Terminal,
+    context::{Exercises, Progress},
+    instruction,
+    server::session::create_session,
+    terminal,
 };
+use chrono::{Datelike, Utc};
 use leptos::*;
 use leptos_meta::*;
 use leptos_use::{storage::use_session_storage, utils::FromToStringCodec};
@@ -10,6 +13,7 @@ use leptos_use::{storage::use_session_storage, utils::FromToStringCodec};
 pub fn App() -> impl IntoView {
     provide_meta_context();
     provide_context(Progress::default());
+    provide_context(Exercises::default());
     let (_, set_state, ..) = use_session_storage::<String, FromToStringCodec>("session_id");
 
     create_effect(move |_| {
@@ -27,8 +31,15 @@ pub fn App() -> impl IntoView {
                 <span class="text-4xl font-extrabold text-[#c6c6c6]">tryrust.org</span>
             </div>
             <div class="flex overflow-auto flex-col gap-4 justify-center items-center p-8 w-full md:flex-row md:gap-0 bg-custom-radial">
-                <Terminal />
-                <Instruction />
+                <terminal::Component />
+                <instruction::Component />
+            </div>
+            <div class="mb-4 md:absolute md:bottom-4 md:left-0 md:right-0 text-center">
+                <p class="text-gray-400">
+                    Powered by <a href="https://github.com/rust-dd" class="text-[#ffbd2e]">
+                        Rust-DD
+                    </a> {" © "} {Utc::now().year()}
+                </p>
             </div>
         </main>
     }
