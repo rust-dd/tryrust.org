@@ -50,19 +50,20 @@ pub fn Component() -> impl IntoView {
                     .expect("Failed to compile");
 
                 if !response.is_empty() {
+                    let is_error = response.contains("error");
                     data.update(|prev| {
-                        let key = if response.contains("error") {
-                            TerminalEvent::Error
-                        } else {
-                            TerminalEvent::Success
-                        };
+                        let key = is_error
+                            .then(|| TerminalEvent::Error)
+                            .unwrap_or(TerminalEvent::Success);
                         prev.insert((prev.len(), key), response);
                     });
 
-                    if code == exercise_01 && progress.get() == 0 {
-                        progress.update(|prev| *prev += 1);
-                    } else if progress.get() == 1 && code == *exercise_02 {
-                        progress.update(|prev| *prev += 1);
+                    if !is_error {
+                        if code == exercise_01 && progress.get() == 0 {
+                            progress.update(|prev| *prev += 1);
+                        } else if progress.get() == 1 && code == *exercise_02 {
+                            progress.update(|prev| *prev += 1);
+                        }
                     }
                 }
 
