@@ -5,13 +5,13 @@ Welcome to the interactive tutorial project, `tryrust.org`, which runs directly 
 
 ![Website screenshot](docs/site.png)
 
-You can access the website at tryrust.org.
+You can access the website at [tryrust.org](https://tryrust.org).
 
 > **Note:** We continuously update the number of tutorials. It is still in progress.
 
 If you want to run it locally, execute the commands below.
 
-## Running your project
+## Running the project
 
 To get started with running the project locally, you will need to execute the following commands. These commands will help you compile your stylesheets and watch for changes in the project.
 
