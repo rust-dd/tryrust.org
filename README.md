@@ -50,3 +50,5 @@ Once the image is built, run it with:
 docker run -p8080:8080 tryrust 
 ```
 
+## Inspiration
+The site was inspired by [tryclojure.org](https://tryclojure.org) and [tryhaskell.org](https://tryhaskell.org).
