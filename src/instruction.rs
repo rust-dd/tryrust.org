@@ -2,7 +2,7 @@ use leptos::*;
 
 use crate::{
     context::{Exercises, Progress},
-    exercises::{exercise_00, exercise_01, exercise_02},
+    exercises::{exercise_00, exercise_01, exercise_02, exercise_03, exercise_04},
 };
 
 #[component]
@@ -12,12 +12,18 @@ pub fn Component() -> impl IntoView {
 
     view! {
         <div class="flex flex-col justify-between p-4 w-full h-auto rounded-xl border border-solid md:p-4 max-w-[600px] border-[rgba(255,255,255,0.1)] bg-[#ffef5c14] shadow-[0_11px_12px_rgba(0,0,0,0.5)] md:max-w-[600px] md:h-[540px]">
-            <div class="p-4">
+            <div class="p-4 overflow-auto">
                 <Show when=move || progress.get() == 0>
                     <exercise_01::Component />
                 </Show>
                 <Show when=move || progress.get() == 1>
                     <exercise_02::Component />
+                </Show>
+                <Show when=move || progress.get() == 2>
+                    <exercise_03::Component />
+                </Show>
+                <Show when=move || progress.get() == 3>
+                    <exercise_04::Component />
                 </Show>
                 <Show when=move || progress.get() == count>
                     <exercise_00::Component />

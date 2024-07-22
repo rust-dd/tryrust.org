@@ -37,6 +37,12 @@ pub fn Component() -> impl IntoView {
             let re = Regex::new(r"\d+\.").unwrap();
             let exercise_02 = re.split(exercise_02).collect::<Vec<&str>>();
             let exercise_02 = exercise_02[2];
+            let exercise_03 = exercises.exercise_03;
+            let exercise_03 = re.split(exercise_03).collect::<Vec<&str>>();
+            let exercise_03 = exercise_03[2];
+            let exercise_04 = exercises.exercise_04;
+            let exercise_04 = re.split(exercise_04).collect::<Vec<&str>>();
+            let exercise_04 = exercise_04[5];
 
             data.update(|prev| {
                 prev.insert((prev.len(), TerminalEvent::Code), code.clone());
@@ -53,7 +59,7 @@ pub fn Component() -> impl IntoView {
                     let is_error = response.contains("error");
                     data.update(|prev| {
                         let key = is_error
-                            .then(|| TerminalEvent::Error)
+                            .then_some(TerminalEvent::Error)
                             .unwrap_or(TerminalEvent::Success);
                         prev.insert((prev.len(), key), response);
                     });
@@ -62,6 +68,10 @@ pub fn Component() -> impl IntoView {
                         if code == exercise_01 && progress.get() == 0 {
                             progress.update(|prev| *prev += 1);
                         } else if progress.get() == 1 && code == *exercise_02 {
+                            progress.update(|prev| *prev += 1);
+                        } else if progress.get() == 2 && code == *exercise_03 {
+                            progress.update(|prev| *prev += 1);
+                        } else if progress.get() == 3 && code == *exercise_04 {
                             progress.update(|prev| *prev += 1);
                         }
                     }

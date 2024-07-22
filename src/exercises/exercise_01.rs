@@ -27,7 +27,7 @@ pub fn Component() -> impl IntoView {
                         set_code(exercise_01.to_string());
                         _ref().get().expect("input_ref should be loaded by now").focus().unwrap();
                     }
-                    class="p-4 mt-2 bg-black bg-opacity-30 rounded-lg transition duration-500 cursor-pointer hover:bg-black hover:bg-opacity-50"
+                    class="p-4 mt-2 bg-black bg-opacity-30 rounded-lg transition duration-500 cursor-pointer hover:bg-black hover:bg-opacity-50 whitespace-pre-wrap"
                 >
                     <code class="font-mono text-sm text-yellow-500">{exercise_01}</code>
                 </pre>

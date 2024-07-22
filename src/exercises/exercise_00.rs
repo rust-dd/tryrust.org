@@ -43,6 +43,11 @@ pub fn Component() -> impl IntoView {
                             Rust on Stack Overflow
                         </a>
                     </li>
+                    <li>
+                        <a href="https://rust-lang.github.io/async-book/" class="text-[#ffbd2e]">
+                            Asynchronous Programming in Rust
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
