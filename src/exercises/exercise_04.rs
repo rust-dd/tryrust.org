@@ -36,7 +36,7 @@ pub fn Component() -> impl IntoView {
                                     .unwrap();
                             }
                         }
-                        class="p-4 bg-black bg-opacity-30 rounded-lg transition duration-500 cursor-pointer hover:bg-black hover:bg-opacity-50 whitespace-pre-wrap"
+                        class="p-4 whitespace-pre-wrap bg-black bg-opacity-30 rounded-lg transition duration-500 cursor-pointer hover:bg-black hover:bg-opacity-50"
                     >
                         <code class="font-mono text-sm text-yellow-500">{exercise_04[0]}</code>
                     </pre>
@@ -55,7 +55,7 @@ pub fn Component() -> impl IntoView {
                                     .unwrap();
                             }
                         }
-                        class="p-4 bg-black bg-opacity-30 rounded-lg transition duration-500 cursor-pointer hover:bg-black hover:bg-opacity-50 whitespace-pre-wrap"
+                        class="p-4 whitespace-pre-wrap bg-black bg-opacity-30 rounded-lg transition duration-500 cursor-pointer hover:bg-black hover:bg-opacity-50"
                     >
                         <code class="font-mono text-sm text-yellow-500">{exercise_04[1]}</code>
                     </pre>
@@ -74,7 +74,7 @@ pub fn Component() -> impl IntoView {
                                     .unwrap();
                             }
                         }
-                        class="p-4 bg-black bg-opacity-30 rounded-lg transition duration-500 cursor-pointer hover:bg-black hover:bg-opacity-50 whitespace-pre-wrap"
+                        class="p-4 whitespace-pre-wrap bg-black bg-opacity-30 rounded-lg transition duration-500 cursor-pointer hover:bg-black hover:bg-opacity-50"
                     >
                         <code class="font-mono text-sm text-yellow-500">{exercise_04[2]}</code>
                     </pre>
@@ -93,7 +93,7 @@ pub fn Component() -> impl IntoView {
                                     .unwrap();
                             }
                         }
-                        class="p-4 bg-black bg-opacity-30 rounded-lg transition duration-500 cursor-pointer hover:bg-black hover:bg-opacity-50 whitespace-pre-wrap"
+                        class="p-4 whitespace-pre-wrap bg-black bg-opacity-30 rounded-lg transition duration-500 cursor-pointer hover:bg-black hover:bg-opacity-50"
                     >
                         <code class="font-mono text-sm text-yellow-500">{exercise_04[3]}</code>
                     </pre>
@@ -112,7 +112,7 @@ pub fn Component() -> impl IntoView {
                                     .unwrap();
                             }
                         }
-                        class="p-4 bg-black bg-opacity-30 rounded-lg transition duration-500 cursor-pointer hover:bg-black hover:bg-opacity-50 whitespace-pre-wrap"
+                        class="p-4 whitespace-pre-wrap bg-black bg-opacity-30 rounded-lg transition duration-500 cursor-pointer hover:bg-black hover:bg-opacity-50"
                     >
 
                         <code class="font-mono text-sm text-left text-yellow-500">
@@ -134,7 +134,7 @@ pub fn Component() -> impl IntoView {
                                     .unwrap();
                             }
                         }
-                        class="p-4 bg-black bg-opacity-30 rounded-lg transition duration-500 cursor-pointer hover:bg-black hover:bg-opacity-50 whitespace-pre-wrap"
+                        class="p-4 whitespace-pre-wrap bg-black bg-opacity-30 rounded-lg transition duration-500 cursor-pointer hover:bg-black hover:bg-opacity-50"
                     >
 
                         <code class="font-mono text-sm text-left text-yellow-500">

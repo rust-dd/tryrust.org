@@ -34,7 +34,7 @@ pub fn Component() -> impl IntoView {
                                     .unwrap();
                             }
                         }
-                        class="p-4 bg-black bg-opacity-30 rounded-lg transition duration-500 cursor-pointer hover:bg-black hover:bg-opacity-50 whitespace-pre-wrap"
+                        class="p-4 whitespace-pre-wrap bg-black bg-opacity-30 rounded-lg transition duration-500 cursor-pointer hover:bg-black hover:bg-opacity-50"
                     >
                         <code class="font-mono text-sm text-yellow-500">{exercise_02[0]}</code>
                     </pre>
@@ -54,7 +54,7 @@ pub fn Component() -> impl IntoView {
                                     .unwrap();
                             }
                         }
-                        class="p-4 bg-black bg-opacity-30 rounded-lg transition duration-500 cursor-pointer hover:bg-black hover:bg-opacity-50 whitespace-pre-wrap"
+                        class="p-4 whitespace-pre-wrap bg-black bg-opacity-30 rounded-lg transition duration-500 cursor-pointer hover:bg-black hover:bg-opacity-50"
                     >
                         <code class="font-mono text-sm text-yellow-500">{exercise_02[1]}</code>
                     </pre>
@@ -74,7 +74,7 @@ pub fn Component() -> impl IntoView {
                                     .unwrap();
                             }
                         }
-                        class="p-4 bg-black bg-opacity-30 rounded-lg transition duration-500 cursor-pointer hover:bg-black hover:bg-opacity-50 whitespace-pre-wrap"
+                        class="p-4 whitespace-pre-wrap bg-black bg-opacity-30 rounded-lg transition duration-500 cursor-pointer hover:bg-black hover:bg-opacity-50"
                     >
                         <code class="font-mono text-sm text-left text-yellow-500">
                             {move || String::from(exercise_02[2])}

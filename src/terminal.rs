@@ -97,6 +97,9 @@ pub fn Component() -> impl IntoView {
 
     view! {
         <div class="flex relative flex-col w-full rounded-xl md:rounded-r-none md:rounded-l-xl max-w-[600px] h-[400px] bg-[#2b2b2b]">
+            <div class="absolute -right-0 -top-8 animate-move">
+                <img src="crab.png" class="w-12 animate-wiggle" />
+            </div>
             <div class="flex justify-between items-center py-2 px-4 rounded-t-xl border-b md:rounded-tr-none md:rounded-tl-xl bg-[#3c3c3c] border-[#4d4d4d]">
                 <div class="flex gap-2 items-center">
                     <div class="w-3 h-3 rounded-full bg-[#ff5f56]"></div>
@@ -158,7 +161,17 @@ pub fn Component() -> impl IntoView {
                 <Show
                     when=move || !compile_code.pending()()
                     fallback=move || {
-                        view! { <span class="ml-2 text-sm text-white">Compiling...</span> }
+                        view! {
+                            <div class="flex flex-row gap-2 justify-center items-center">
+                                <img
+                                    src="rust_color.png"
+                                    width=16
+                                    height=16
+                                    class="animate-spin-fast"
+                                />
+                                <span class="text-sm text-white">Compiling...</span>
+                            </div>
+                        }
                     }
                 >
                     <div />
