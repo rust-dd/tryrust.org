@@ -18,6 +18,9 @@ RUN rustup target add wasm32-unknown-unknown
 WORKDIR /work
 COPY . .
 
+# Install the required npm dependencies
+RUN npm install
+
 # Process Tailwind CSS
 RUN npx tailwindcss -i input.css -o ./style/output.css
 

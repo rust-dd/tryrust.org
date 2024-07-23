@@ -109,7 +109,7 @@ pub fn Component() -> impl IntoView {
                 <div class="text-sm text-[#9e9e9e]">Terminal</div>
                 <div />
             </div>
-            <div class="overflow-auto flex-1 px-4 pt-4 mb-8 font-mono text-sm leading-relaxed text-[#c6c6c6]">
+            <div class="overflow-auto flex-1 px-4 pt-4 mb-8 font-mono text-sm leading-relaxed scrollbar-thin scrollbar-track-transparent scrollbar-thumb-scrollbar-thumb text-[#c6c6c6]">
                 <For
                     each=move || data.get().into_iter()
                     key=|((idx, _), _)| *idx

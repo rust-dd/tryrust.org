@@ -9,6 +9,9 @@ module.exports = {
         "custom-radial":
           "radial-gradient(37.4% 50% at 75.5% 50%, rgba(255, 239, 92, 0.2) 0%, rgba(255, 239, 92, 0) 100%)",
       },
+      colors: {
+        "scrollbar-thumb": "rgba(0, 0, 0, 0.5)",
+      },
       keyframes: {
         move: {
           "0%, 100%": { transform: "translateX(0)" },
@@ -26,5 +29,5 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [require("tailwind-scrollbar")],
 };

@@ -80,7 +80,7 @@ pub fn Component() -> impl IntoView {
                     </pre>
                 </div>
                 <div class="flex flex-col gap-1">
-                    <h3 class="text-xl font-bold">Mutable reference</h3>
+                    <h3 class="text-xl font-bold">Print all references</h3>
                     <pre
                         on:click={
                             let exercise_04 = exercise_04.clone();
@@ -99,7 +99,7 @@ pub fn Component() -> impl IntoView {
                     </pre>
                 </div>
                 <div class="flex flex-col gap-1">
-                    <h3 class="text-xl font-bold">Print all references</h3>
+                    <h3 class="text-xl font-bold">Mutable reference</h3>
                     <pre
                         on:click={
                             let exercise_04 = exercise_04.clone();
