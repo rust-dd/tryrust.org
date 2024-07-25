@@ -1,11 +1,8 @@
 # tryrust.org
 
-Welcome to the interactive tutorial project, `tryrust.org`, which runs directly in your browser.
-
+Welcome to the interactive tutorial project, [tryrust.org](https://tryrust.org), which runs directly in your browser.
 
 ![Website screenshot](docs/site.png)
-
-You can access the website at [tryrust.org](https://tryrust.org).
 
 > **Note:** We continuously update the number of tutorials. It is still in progress.
 
