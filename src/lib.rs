@@ -6,6 +6,8 @@ pub mod exercises;
 #[cfg(feature = "ssr")]
 pub mod fileserv;
 pub mod instruction;
+#[cfg(feature = "ssr")]
+pub mod redirect;
 pub mod server;
 pub mod terminal;
 

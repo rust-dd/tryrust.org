@@ -6,6 +6,8 @@ async fn main() {
     use leptos_axum::{generate_route_list, LeptosRoutes};
     use tryrust::app::*;
     use tryrust::fileserv::file_and_error_handler;
+    use tryrust::redirect::redirect_www;
+    use tower_http::trace::TraceLayer;
 
     tracing_subscriber::fmt()
         .with_file(true)
@@ -27,6 +29,7 @@ async fn main() {
     let app = Router::new()
         .leptos_routes(&leptos_options, routes, App)
         .fallback(file_and_error_handler)
+        .layer(tower::ServiceBuilder::new().layer(TraceLayer::new_for_http()).layer(axum::middleware::from_fn(redirect_www)))
         .with_state(leptos_options);
 
     let listener = tokio::net::TcpListener::bind(&addr).await.unwrap();
