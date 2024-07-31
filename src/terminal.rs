@@ -43,6 +43,9 @@ pub fn Component() -> impl IntoView {
             let exercise_04 = exercises.exercise_04;
             let exercise_04 = re.split(exercise_04).collect::<Vec<&str>>();
             let exercise_04 = exercise_04[5];
+            let exercise_05 = exercises.exercise_05;
+            let exercise_05 = re.split(exercise_05).collect::<Vec<&str>>();
+            let exercise_05 = exercise_05[5];
 
             data.update(|prev| {
                 prev.insert((prev.len(), TerminalEvent::Code), code.clone());
@@ -72,6 +75,8 @@ pub fn Component() -> impl IntoView {
                         } else if progress.get() == 2 && code == *exercise_03 {
                             progress.update(|prev| *prev += 1);
                         } else if progress.get() == 3 && code == *exercise_04 {
+                            progress.update(|prev| *prev += 1);
+                        } else if progress.get() == 4 && code == *exercise_05 {
                             progress.update(|prev| *prev += 1);
                         }
                     }
