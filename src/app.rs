@@ -25,8 +25,11 @@ pub fn App() -> impl IntoView {
 
     view! {
         <Stylesheet id="leptos" href="/pkg/tryrust.css" />
-        <Title text="TryRust.org - Rust Programming Experiment"/>
-        <Meta name="description" content="An interactive tutorial to get started with the Rust programming language. Experiment with Rust in your browser."/>
+        <Title text="TryRust.org - Rust Programming Experiment" />
+        <Meta
+            name="description"
+            content="An interactive tutorial to get started with the Rust programming language. Experiment with Rust in your browser."
+        />
         <main class="flex overflow-auto flex-col w-screen md:flex-row md:items-center md:h-screen bg-[#1e1e1e]">
             <div class="flex z-50 flex-row gap-2 items-center py-1 px-2 mt-8 ml-8 rounded-lg md:absolute md:top-4 md:left-8 md:mt-0 md:ml-0">
                 <img src="rust_color.png" width=56 height=56 />
@@ -39,7 +42,7 @@ pub fn App() -> impl IntoView {
             <div class="mb-4 text-center md:absolute md:right-0 md:left-0 md:bottom-4 md:mb-0">
                 <p class="text-gray-400">
                     Powered by <a href="https://github.com/rust-dd" class="text-[#ffbd2e]">
-                        Rust-DD
+                        rust-dd
                     </a> {" © "} {Utc::now().year()}
                 </p>
             </div>
