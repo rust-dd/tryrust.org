@@ -23,8 +23,12 @@ async fn main() {
         .add(
             Job::new_async("0 * * * * *", |_uuid, _l| {
                 Box::pin(async move {
-                    let paths = fs::read_dir("./sessions").unwrap();
-                    for path in paths {
+                    let paths = fs::read_dir("./sessions");
+                    if paths.is_err() {
+                        tracing::info!("Sessions folder does not exist");
+                        return;
+                    }
+                    for path in paths.unwrap() {
                         let full_folder_path = path.unwrap().path();
                         if full_folder_path.metadata().unwrap().is_file() {
                             continue;
@@ -43,7 +47,7 @@ async fn main() {
                             let _ = fs::remove_dir_all(full_folder_path);
                         }
                     }
-                    tracing::info!("Cleaning folders older than 3 days...");
+                    tracing::info!("Finished cleaning folders older than 3 days...");
                 })
             })
             .unwrap(),
