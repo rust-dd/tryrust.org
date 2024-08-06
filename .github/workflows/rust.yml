@@ -3,8 +3,6 @@ name: Rust
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 env:
   CARGO_TERM_COLOR: always
@@ -26,3 +24,9 @@ jobs:
     
     - name: Run tests
       run: cargo test --verbose
+
+    - name: Deploy to DigitalOcean
+      uses: digitalocean/app_action/deploy@v2
+      with:
+        app_name: tryrust-org
+        token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
