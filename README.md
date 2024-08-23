@@ -1,5 +1,7 @@
 # tryrust.org
 
+![workflow](https://github.com/rust-dd/tryrust.org/actions/workflows/rust.yml/badge.svg)
+
 Welcome to the interactive tutorial project, [tryrust.org](https://tryrust.org), which runs directly in your browser.
 
 ![Website screenshot](docs/site.png)
@@ -16,6 +18,7 @@ To get started with running the project locally, you will need to execute the fo
 First, compile the CSS using TailwindCSS:
 
 ```bash
+npm install
 npx tailwindcss -i input.css -o ./style/output.css --watch
 ```
 
