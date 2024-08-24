@@ -20,11 +20,12 @@ wasm-bindgen = "=0.2.93"
 thiserror = "1"
 tracing = { version = "0.1", optional = true }
 http = "1"
-leptos-use = { version = "0.10.10" }
+leptos-use = {git = "https://github.com/Synphonyte/leptos-use.git" }
 tracing-subscriber = "0.3.18"
 chrono = "0.4.38"
 tokio-cron-scheduler = "0.10.2"
 regex = "1.10.5"
+codee = "0.2.0" 
 
 [features]
 hydrate = ["leptos/hydrate", "leptos_meta/hydrate", "leptos_router/hydrate"]

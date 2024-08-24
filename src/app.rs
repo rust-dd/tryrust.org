@@ -5,9 +5,10 @@ use crate::{
     terminal,
 };
 use chrono::{Datelike, Utc};
+use codee::string::FromToStringCodec;
 use leptos::*;
 use leptos_meta::*;
-use leptos_use::{storage::use_session_storage, utils::FromToStringCodec};
+use leptos_use::storage::use_session_storage;
 
 #[component]
 pub fn App() -> impl IntoView {

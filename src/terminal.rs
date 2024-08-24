@@ -1,9 +1,10 @@
+use codee::string::FromToStringCodec;
 use regex::Regex;
 use std::{collections::BTreeMap, sync::Arc};
 
 use html::Input;
 use leptos::*;
-use leptos_use::{storage::use_session_storage, use_event_listener, utils::FromToStringCodec};
+use leptos_use::{storage::use_session_storage, use_event_listener};
 
 use crate::{
     context::{CodeSetter, Exercises, InputRef, Progress},
