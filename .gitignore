@@ -19,3 +19,5 @@ style/output.css
 .idea/
 
 package-lock.json
+
+.zed/
