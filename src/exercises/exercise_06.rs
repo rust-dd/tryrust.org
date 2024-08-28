@@ -15,13 +15,13 @@ pub fn Component() -> impl IntoView {
     view! {
         <div class="flex flex-col gap-4 w-full text-white rounded-lg">
             <div class="flex flex-col gap-2">
-                <h2 class="text-3xl font-bold">Learning by Structs and Operator Overloading</h2>
+                <h2 class="text-3xl font-bold">Learning by Functions</h2>
                 <p class="text-gray-400">
-                    {r#"In this exercise, we will define a Vec struct with x and y fields and implement the Add operator for it."#}
+                    {r#"In this exercise, we'll define and use functions in Rust."#}
                 </p>
 
                 <div class="flex flex-col gap-1 mt-2">
-                    <h3 class="text-xl font-bold">Step 1: Define the Vec struct</h3>
+                    <h3 class="text-xl font-bold">Step 1: Define a Function without Return</h3>
                     <pre
                         on:click={
                             let exercise_06 = exercise_06.clone();
@@ -41,7 +41,7 @@ pub fn Component() -> impl IntoView {
                 </div>
 
                 <div class="flex flex-col gap-1">
-                    <h3 class="text-xl font-bold">Step 2: Implement Add for Vec</h3>
+                    <h3 class="text-xl font-bold">Step 2: Define a Function with Return</h3>
                     <pre
                         on:click={
                             let exercise_06 = exercise_06.clone();
@@ -61,7 +61,7 @@ pub fn Component() -> impl IntoView {
                 </div>
 
                 <div class="flex flex-col gap-1">
-                    <h3 class="text-xl font-bold">Step 3: Declare v1</h3>
+                    <h3 class="text-xl font-bold">Step 3: Call Your Functions</h3>
                     <pre
                         on:click={
                             let exercise_06 = exercise_06.clone();
@@ -81,7 +81,7 @@ pub fn Component() -> impl IntoView {
                 </div>
 
                 <div class="flex flex-col gap-1">
-                    <h3 class="text-xl font-bold">Step 4: Declare v2</h3>
+                    <h3 class="text-xl font-bold">Step 4: Call Your Greet Functions</h3>
                     <pre
                         on:click={
                             let exercise_06 = exercise_06.clone();
@@ -97,49 +97,6 @@ pub fn Component() -> impl IntoView {
                         class="p-4 whitespace-pre-wrap bg-black bg-opacity-30 rounded-lg transition duration-500 cursor-pointer hover:bg-black hover:bg-opacity-50"
                     >
                         <code class="font-mono text-sm text-yellow-500">{exercise_06[3]}</code>
-                    </pre>
-                </div>
-
-                <div class="flex flex-col gap-1">
-                    <h3 class="text-xl font-bold">Step 5: Add v1 and v2</h3>
-                    <pre
-                        on:click={
-                            let exercise_06 = exercise_06.clone();
-                            move |_| {
-                                set_code(String::from(exercise_06[4]));
-                                _ref()
-                                    .get()
-                                    .expect("input_ref should be loaded by now")
-                                    .focus()
-                                    .unwrap();
-                            }
-                        }
-                        class="p-4 whitespace-pre-wrap bg-black bg-opacity-30 rounded-lg transition duration-500 cursor-pointer hover:bg-black hover:bg-opacity-50"
-                    >
-                        <code class="font-mono text-sm text-left text-yellow-500">
-                            {exercise_06[4]}
-                        </code>
-                    </pre>
-                </div>
-                <div class="flex flex-col gap-1">
-                    <h3 class="text-xl font-bold">Step : Print v1, v2, and v3</h3>
-                    <pre
-                        on:click={
-                            let exercise_06 = exercise_06.clone();
-                            move |_| {
-                                set_code(String::from(exercise_06[5]));
-                                _ref()
-                                    .get()
-                                    .expect("input_ref should be loaded by now")
-                                    .focus()
-                                    .unwrap();
-                            }
-                        }
-                        class="p-4 whitespace-pre-wrap bg-black bg-opacity-30 rounded-lg transition duration-500 cursor-pointer hover:bg-black hover:bg-opacity-50"
-                    >
-                        <code class="font-mono text-sm text-left text-yellow-500">
-                            {move || String::from(exercise_06[5])}
-                        </code>
                     </pre>
                 </div>
             </div>
