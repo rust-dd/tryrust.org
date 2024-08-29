@@ -61,7 +61,7 @@ pub fn Component() -> impl IntoView {
                 </div>
 
                 <div class="flex flex-col gap-1">
-                    <h3 class="text-xl font-bold">Step 3: Call Your Functions</h3>
+                    <h3 class="text-xl font-bold">Step 3: Call Your Greet Functions</h3>
                     <pre
                         on:click={
                             let exercise_06 = exercise_06.clone();
@@ -81,7 +81,7 @@ pub fn Component() -> impl IntoView {
                 </div>
 
                 <div class="flex flex-col gap-1">
-                    <h3 class="text-xl font-bold">Step 4: Call Your Greet Functions</h3>
+                    <h3 class="text-xl font-bold">Step 4: Call Your Dice Functions</h3>
                     <pre
                         on:click={
                             let exercise_06 = exercise_06.clone();
