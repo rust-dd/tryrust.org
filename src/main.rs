@@ -63,6 +63,7 @@ async fn main() {
     // build our application with a route
     let app = Router::new()
         .leptos_routes(&leptos_options, routes, App)
+        // TODO: new version in v.0.7.0
         .fallback((|| (StatusCode::NOT_FOUND, "Not Found"))())
         .layer(
             tower::ServiceBuilder::new()
