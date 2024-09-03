@@ -6,6 +6,7 @@ async fn main() {
     use chrono::{Duration, Utc};
     use leptos::*;
     use leptos_axum::{generate_route_list, LeptosRoutes};
+    use tryrust::fileserv::file_and_error_handler;
     use std::fs;
     use tokio_cron_scheduler::{Job, JobScheduler};
     use tower_http::trace::TraceLayer;
@@ -64,7 +65,7 @@ async fn main() {
     let app = Router::new()
         .leptos_routes(&leptos_options, routes, App)
         // TODO: new version in v.0.7.0
-        .fallback((|| (StatusCode::NOT_FOUND, "Not Found"))())
+        .fallback(file_and_error_handler)
         .layer(
             tower::ServiceBuilder::new()
                 .layer(TraceLayer::new_for_http())
