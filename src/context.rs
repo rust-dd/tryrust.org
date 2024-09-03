@@ -20,6 +20,7 @@ where
     pub exercise_04: &'a str,
     pub exercise_05: &'a str,
     pub exercise_06: &'a str,
+    pub exercise_07: &'a str,
     pub count: usize,
 }
 
@@ -31,8 +32,9 @@ impl<'a> Default for Exercises<'a> {
             exercise_03: r#"let mut x = 10;1.x = 15;2.println!("The value of x is: {}", x);"#,
             exercise_04: r#"let mut y = 20;1.let y_ref1 = &y;2.let y_ref2 = &y;3.println!("y_ref1: {}, y_ref2: {}", y_ref1, y_ref2);4.let y_mut_ref = &mut y;5.println!("y_mut_ref: {}", y_mut_ref);"#,
             exercise_05: r#"let tuple = (10, 20);1.println!("The elements are: {} {}", tuple.0, tuple.1);2.let (x, y) = tuple;3.println!("Destructured: x = {}, y = {}", x, y);"#,
-            exercise_06: r#"#[derive(Debug)] struct Vec { x: i32, y: i32 };1.impl std::ops::Add for Vec { type Output = Self; fn add(self, other: Self) -> Self { Self { x: self.x + other.x, y: self.y + other.y } } };2.let v1 = Vec { x: 1, y: 2 };3.let v2 = Vec { x: 3, y: 4 };4.let result = v1 + v2;5.println!("result: {:?}", result);"#,
-            count: 6,
+            exercise_06: r#"fn greet() { println!("Hi there!"); };1.fn dice_roll() -> i32 { 4 };2.greet();3.let result = dice_roll(); println!("Dice roll result: {}", result);"#,
+            exercise_07: r#"#[derive(Debug)] struct Vec { x: i32, y: i32 };1.impl std::ops::Add for Vec { type Output = Self; fn add(self, other: Self) -> Self { Self { x: self.x + other.x, y: self.y + other.y } } };2.let v1 = Vec { x: 1, y: 2 };3.let v2 = Vec { x: 3, y: 4 };4.let result = v1 + v2;5.println!("result: {:?}", result);"#,
+            count: 7,
         }
     }
 }

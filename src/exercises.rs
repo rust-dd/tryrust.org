@@ -5,3 +5,4 @@ pub mod exercise_03;
 pub mod exercise_04;
 pub mod exercise_05;
 pub mod exercise_06;
+pub mod exercise_07;

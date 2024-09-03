@@ -18,17 +18,23 @@ pub async fn compile(session_id: String, code: String) -> Result<String, ServerF
     let sed_command = cfg!(target_os = "macos").then(|| "gsed").unwrap_or("sed");
     let modified_code = format!("{};", code);
     let commands = vec![
+        // Comment out all lines that start with `print`
         format!(
-            "{} -i '/\\/\\//! s/print/\\/\\/print/g' {}",
+            "{} -i '/^    print/ s/^\\(.*\\)$/\\/\\/\\1/g' {}",
             sed_command, file_path
         ),
-        format!("{} -i '$i\\{}' {}", sed_command, modified_code, file_path),
-        format!("rustfmt -- {}", file_path),
+        // Comment out all lines that end with `();`, which includes function calls
         format!(
-            "cargo run --manifest-path ./sessions/{0}/Cargo.toml -- --name tryrust-{0}",
-            session_id
+            "{} -i '/();$/ s/^\\(.*\\)$/\\/\\/\\1/g' {}",
+            sed_command, file_path
         ),
-    ];
+            format!("{} -i '$i\\{}' {}", sed_command, modified_code, file_path),
+            format!("rustfmt -- {}", file_path),
+            format!(
+                "cargo run --manifest-path ./sessions/{0}/Cargo.toml -- --name tryrust-{0}",
+                session_id
+            ),
+        ];
     let command = commands.join(" && ");
 
     let mut cmd = Command::new("sh");
