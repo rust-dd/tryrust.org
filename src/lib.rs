@@ -3,8 +3,6 @@
 pub mod app;
 pub mod context;
 pub mod exercises;
-#[cfg(feature = "ssr")]
-pub mod fileserv;
 pub mod instruction;
 #[cfg(feature = "ssr")]
 pub mod redirect;
