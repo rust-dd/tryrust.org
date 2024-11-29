@@ -1,15 +1,16 @@
 #[cfg(feature = "ssr")]
 #[tokio::main]
 async fn main() {
+    use axum::http::StatusCode;
     use axum::Router;
     use chrono::{Duration, Utc};
     use leptos::*;
     use leptos_axum::{generate_route_list, LeptosRoutes};
+    use tryrust::fileserv::file_and_error_handler;
     use std::fs;
     use tokio_cron_scheduler::{Job, JobScheduler};
     use tower_http::trace::TraceLayer;
-    use tryrust::app::*;
-    use tryrust::fileserv::file_and_error_handler;
+    use tryrust::app::App;
     use tryrust::redirect::redirect_www;
 
     tracing_subscriber::fmt()
@@ -63,6 +64,7 @@ async fn main() {
     // build our application with a route
     let app = Router::new()
         .leptos_routes(&leptos_options, routes, App)
+        // TODO: new version in v.0.7.0
         .fallback(file_and_error_handler)
         .layer(
             tower::ServiceBuilder::new()
