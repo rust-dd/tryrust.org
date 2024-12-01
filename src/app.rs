@@ -28,7 +28,7 @@ pub fn App() -> impl IntoView {
 
     view! {
         <Stylesheet id="leptos" href="/pkg/tryrust.css" />
-        <Title text="TryRust.org - Rust Programming Experiment" />
+        <Title text="Try Rust - Rust Programming Experiment" />
         <Meta
             name="description"
             content="An interactive tutorial to get started with the Rust programming language. Experiment with Rust in your browser."
@@ -37,7 +37,7 @@ pub fn App() -> impl IntoView {
             <div class="flex z-50 w-full flex-row gap-2 items-center justify-between py-1 mt-8 px-8 rounded-lg md:absolute md:top-4 md:mt-0 md:ml-0">
                 <div class="flex items-center gap-2">
                     <img src="rust_color.png" width=56 height=56 />
-                    <span class="text-4xl font-extrabold text-[#c6c6c6]">tryrust.org</span>
+                    <span class="text-4xl font-extrabold text-[#c6c6c6]">Try Rust</span>
                 </div>
                 <a href="https://github.com/rust-dd/tryrust.org" target="_blank">
                     <Icon icon=i::IoLogoGithub class="size-8 text-white" />
