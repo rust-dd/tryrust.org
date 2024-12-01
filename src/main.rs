@@ -1,7 +1,6 @@
 #[cfg(feature = "ssr")]
 #[tokio::main]
 async fn main() {
-    use axum::http::StatusCode;
     use axum::Router;
     use chrono::{Duration, Utc};
     use leptos::*;
