@@ -5,11 +5,12 @@ FROM rustlang/rust:nightly-alpine as builder
 RUN apk update && \
     apk add --no-cache bash curl npm libc-dev binaryen
 
-# Install SASS globally
+# Install Tailwind CSS globally
 RUN npm install -g tailwindcss
 
-# Install cargo-leptos
-RUN curl --proto '=https' --tlsv1.2 -LsSf https://github.com/leptos-rs/cargo-leptos/releases/latest/download/cargo-leptos-installer.sh | sh
+# Install a specific version of cargo-leptos
+ENV CARGO_LEPTOS_VERSION=0.2.22
+RUN curl -L https://github.com/leptos-rs/cargo-leptos/releases/download/v${CARGO_LEPTOS_VERSION}/cargo-leptos-installer.sh | sh
 
 # Add the WASM target
 RUN rustup target add wasm32-unknown-unknown
@@ -45,7 +46,6 @@ ENV RUST_LOG="info"
 ENV LEPTOS_SITE_ADDR="0.0.0.0:8080"
 ENV LEPTOS_SITE_ROOT="site"
 EXPOSE 8080
-
 
 # Run the server
 CMD ["/app/tryrust"]
