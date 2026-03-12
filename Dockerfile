@@ -1,5 +1,5 @@
 # Stage 1: Build
-FROM rustlang/rust:nightly-alpine AS builder
+FROM rust:latest AS builder
 
 RUN apk update && \
     apk add --no-cache bash curl npm libc-dev binaryen clang openssl-dev openssl-libs-static pkgconfig
@@ -17,7 +17,7 @@ RUN npm install && npx @tailwindcss/cli -i tailwind.css -o assets/tailwind.css -
 RUN dx bundle --release --fullstack
 
 # Stage 2: Runtime
-FROM rustlang/rust:nightly-alpine AS runner
+FROM rust:latest AS runner
 
 RUN apk update && \
     apk add --no-cache sed bash
