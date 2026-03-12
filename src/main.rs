@@ -5,6 +5,7 @@ mod instruction;
 mod server;
 mod terminal;
 
+use exercises::EXERCISES;
 use instruction::Instruction;
 use server::create_session;
 use terminal::Terminal;
@@ -13,6 +14,8 @@ static MAIN_CSS: Asset = asset!("/assets/tailwind.css");
 static FAVICON: Asset = asset!("/public/favicon.ico");
 static RUST_LOGO: Asset = asset!("/public/rust_color.png");
 
+const CATEGORIES: &[&str] = &["Basics", "Intermediate", "Advanced", "Projects"];
+
 fn main() {
     dioxus::launch(App);
 }
@@ -20,10 +23,11 @@ fn main() {
 #[component]
 fn App() -> Element {
     let mut session_id = use_signal(|| String::new());
-    let exercise_idx = use_signal(|| 0usize);
-    let step_idx = use_signal(|| 0usize);
-    let mut active_tab = use_signal(|| 0u8);
+    let mut exercise_idx = use_signal(|| 0usize);
+    let mut step_idx = use_signal(|| 0usize);
+    let mut active_tab = use_signal(|| 0u8); // mobile: 0=learn, 1=code
     let code_input = use_signal(|| String::new());
+    let mut sidebar_open = use_signal(|| false);
 
     use_effect(move || {
         spawn(async move {
@@ -34,6 +38,10 @@ fn App() -> Element {
     });
 
     let tab = *active_tab.read();
+    let ex_i = *exercise_idx.read();
+    let total = EXERCISES.len();
+    let completed = ex_i;
+    let show_sidebar = *sidebar_open.read();
 
     rsx! {
         document::Stylesheet { href: MAIN_CSS }
@@ -54,63 +62,165 @@ fn App() -> Element {
         document::Link { rel: "canonical", href: "https://tryrust.org" }
         document::Link { rel: "icon", href: FAVICON, r#type: "image/x-icon" }
 
-        div { class: "h-[100dvh] flex flex-col bg-[#09090b] text-white overflow-hidden",
+        div { class: "h-[100dvh] flex flex-col bg-[#0e1117] text-white overflow-hidden",
 
-            // Header
-            header { class: "relative flex items-center justify-between px-5 md:px-8 py-3 border-b border-white/10 flex-shrink-0 overflow-hidden",
-                div { class: "flex items-center gap-3 z-10",
-                    img { src: RUST_LOGO, width: 36, height: 36, alt: "Rust logo" }
-                    span { class: "text-lg font-semibold tracking-tight", "Try Rust" }
+            // Top bar
+            header { class: "flex items-center justify-between px-4 py-2 border-b border-[#1c2333] flex-shrink-0",
+                div { class: "flex items-center gap-3",
+                    // Menu button (toggles sidebar)
+                    button {
+                        class: "hidden md:flex w-7 h-7 items-center justify-center rounded-md hover:bg-white/[0.06] transition-colors text-zinc-500 hover:text-zinc-300",
+                        onclick: move |_| { sidebar_open.set(!show_sidebar); },
+                        svg { width: "16", height: "16", view_box: "0 0 16 16", fill: "currentColor",
+                            path { d: "M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 010 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 010 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 000 1.5h12.5a.75.75 0 000-1.5H1.75z" }
+                        }
+                    }
+                    img { src: RUST_LOGO, width: 24, height: 24, alt: "Rust logo" }
+                    span { class: "text-sm font-semibold text-zinc-300", "Try Rust" }
                 }
 
+                // Progress
+                div { class: "hidden md:flex items-center gap-2",
+                    div { class: "w-32 h-1.5 rounded-full bg-[#1c2333] overflow-hidden",
+                        div {
+                            class: "h-full rounded-full bg-emerald-500 transition-all duration-500",
+                            style: "width: {((completed as f64 / total as f64) * 100.0) as u32}%",
+                        }
+                    }
+                    span { class: "text-[11px] text-zinc-500 tabular-nums", "{completed}/{total}" }
+                }
+
+                // GitHub
                 a {
                     href: "https://github.com/rust-dd/tryrust.org",
                     target: "_blank",
                     rel: "noopener noreferrer",
-                    class: "z-10 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors text-zinc-400 hover:text-white",
+                    class: "w-7 h-7 flex items-center justify-center rounded-md hover:bg-white/[0.06] transition-colors text-zinc-500 hover:text-zinc-300",
                     aria_label: "GitHub",
                     svg {
-                        width: "20", height: "20", view_box: "0 0 24 24", fill: "currentColor",
+                        width: "18", height: "18", view_box: "0 0 24 24", fill: "currentColor",
                         path { d: "M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" }
                     }
                 }
             }
 
             // Mobile tabs
-            div { class: "md:hidden flex flex-shrink-0 bg-[#09090b]",
+            div { class: "md:hidden flex flex-shrink-0 border-b border-[#1c2333]",
                 button {
-                    class: if tab == 0 { "flex-1 py-2.5 text-sm font-medium text-orange-400 border-b-2 border-orange-400" } else { "flex-1 py-2.5 text-sm font-medium text-zinc-500 border-b-2 border-transparent" },
+                    class: if tab == 0 {
+                        "flex-1 py-2 text-xs font-medium text-emerald-400 border-b border-emerald-400"
+                    } else {
+                        "flex-1 py-2 text-xs font-medium text-zinc-600"
+                    },
                     onclick: move |_| active_tab.set(0),
-                    "Code"
-                }
-                button {
-                    class: if tab == 1 { "flex-1 py-2.5 text-sm font-medium text-orange-400 border-b-2 border-orange-400" } else { "flex-1 py-2.5 text-sm font-medium text-zinc-500 border-b-2 border-transparent" },
-                    onclick: move |_| active_tab.set(1),
                     "Learn"
                 }
-            }
-
-            // Main content - fills remaining space
-            div { class: "flex-1 flex flex-col md:flex-row min-h-0",
-
-                // Terminal
-                div {
-                    class: if tab == 0 { "flex-1 flex flex-col min-h-0 md:flex md:border-r md:border-white/10" } else { "hidden md:flex md:flex-1 md:flex-col md:min-h-0 md:border-r md:border-white/10" },
-                    Terminal { session_id, exercise_idx, step_idx, code_input }
-                }
-
-                // Instructions
-                div {
-                    class: if tab == 1 { "flex-1 flex flex-col min-h-0 md:flex" } else { "hidden md:flex md:flex-1 md:flex-col md:min-h-0" },
-                    Instruction { exercise_idx, step_idx, code_input }
+                button {
+                    class: if tab == 1 {
+                        "flex-1 py-2 text-xs font-medium text-emerald-400 border-b border-emerald-400"
+                    } else {
+                        "flex-1 py-2 text-xs font-medium text-zinc-600"
+                    },
+                    onclick: move |_| active_tab.set(1),
+                    "Terminal"
                 }
             }
 
-            // Footer
-            footer { class: "flex items-center justify-center py-2 border-t border-white/10 flex-shrink-0",
-                span { class: "text-[11px] text-zinc-600",
-                    "Powered by "
-                    a { href: "https://github.com/rust-dd", target: "_blank", class: "text-zinc-500 hover:text-orange-400 transition-colors", "rust-dd" }
+            // Main layout
+            div { class: "flex-1 flex min-h-0",
+
+                // Sidebar - course outline (desktop only)
+                if show_sidebar {
+                    div { class: "hidden md:flex md:flex-col w-56 border-r border-[#1c2333] bg-[#0c0f16] overflow-y-auto shrink-0",
+                        div { class: "p-3",
+                            for cat in CATEGORIES.iter() {
+                                {
+                                    let cat_name = *cat;
+                                    let cat_exercises: Vec<(usize, &crate::exercises::Exercise)> = EXERCISES
+                                        .iter()
+                                        .enumerate()
+                                        .filter(|(_, e)| e.category == cat_name)
+                                        .collect();
+
+                                    let dot_color = match cat_name {
+                                        "Basics" => "bg-emerald-500",
+                                        "Intermediate" => "bg-blue-500",
+                                        "Advanced" => "bg-purple-500",
+                                        _ => "bg-amber-500",
+                                    };
+
+                                    rsx! {
+                                        div { class: "mb-3",
+                                            // Category header
+                                            div { class: "flex items-center gap-1.5 mb-1 px-2",
+                                                div { class: "w-1.5 h-1.5 rounded-full {dot_color}" }
+                                                span { class: "text-[10px] font-semibold uppercase tracking-wider text-zinc-500", "{cat_name}" }
+                                            }
+                                            // Exercise list
+                                            for (idx, ex) in cat_exercises.iter() {
+                                                {
+                                                    let exercise_index = *idx;
+                                                    let is_current = exercise_index == ex_i;
+                                                    let is_done = exercise_index < ex_i;
+                                                    rsx! {
+                                                        button {
+                                                            class: if is_current {
+                                                                "w-full text-left px-2 py-1 rounded text-[12px] text-white bg-white/[0.06] font-medium truncate"
+                                                            } else if is_done {
+                                                                "w-full text-left px-2 py-1 rounded text-[12px] text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.03] transition-colors truncate"
+                                                            } else {
+                                                                "w-full text-left px-2 py-1 rounded text-[12px] text-zinc-600 hover:text-zinc-400 hover:bg-white/[0.03] transition-colors truncate"
+                                                            },
+                                                            onclick: move |_| {
+                                                                exercise_idx.set(exercise_index);
+                                                                step_idx.set(0);
+                                                            },
+                                                            if is_done {
+                                                                span { class: "text-emerald-500 mr-1", "✓" }
+                                                            }
+                                                            "{ex.title}"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        // Footer
+                        div { class: "mt-auto p-3 border-t border-[#1c2333]",
+                            span { class: "text-[10px] text-zinc-700",
+                                "Powered by "
+                                a { href: "https://github.com/rust-dd", target: "_blank", class: "text-zinc-600 hover:text-emerald-400 transition-colors", "rust-dd" }
+                            }
+                        }
+                    }
+                }
+
+                // Main content area
+                div { class: "flex-1 flex flex-col md:flex-row min-h-0",
+
+                    // Terminal panel (left)
+                    div {
+                        class: if tab == 1 {
+                            "flex-1 flex flex-col min-h-0 md:flex"
+                        } else {
+                            "hidden md:flex md:flex-1 md:flex-col md:min-h-0"
+                        },
+                        Terminal { session_id, exercise_idx, step_idx, code_input }
+                    }
+
+                    // Exercise catalog (right)
+                    div {
+                        class: if tab == 0 {
+                            "flex-1 flex flex-col min-h-0 md:flex md:w-[420px] md:max-w-[420px] md:shrink-0 md:flex-none md:border-l md:border-[#1c2333]"
+                        } else {
+                            "hidden md:flex md:w-[420px] md:max-w-[420px] md:shrink-0 md:flex-none md:flex-col md:min-h-0 md:border-l md:border-[#1c2333]"
+                        },
+                        Instruction { exercise_idx, step_idx, code_input }
+                    }
                 }
             }
 

@@ -76,38 +76,39 @@ pub fn Terminal(
     let compiling = *is_compiling.read();
 
     rsx! {
-        div { class: "flex flex-col h-full bg-[#0c0c0c]",
+        div { class: "flex flex-col h-full bg-[#08080c]",
 
             // Terminal output
             div {
                 id: "term-out",
-                class: "flex-1 overflow-y-auto p-4 font-mono text-[13px] leading-6",
+                class: "flex-1 overflow-y-auto p-4 font-mono text-[13px] leading-relaxed",
 
                 // Welcome
                 if history.read().is_empty() {
-                    div { class: "text-zinc-600 mb-2",
-                        "// Welcome to Try Rust. Click a code snippet or type below."
+                    div { class: "flex flex-col gap-1 mb-4",
+                        span { class: "text-zinc-600", "// Welcome to Try Rust" }
+                        span { class: "text-zinc-700", "// Click a code snippet on the right, or type below" }
                     }
                 }
 
                 for (i, entry) in history.read().iter().enumerate() {
                     match entry {
                         TerminalEntry::Input(t) => rsx! {
-                            div { key: "{i}", class: "flex gap-2",
-                                span { class: "text-orange-400 select-none shrink-0", ">" }
-                                span { class: "text-zinc-300", "{t}" }
+                            div { key: "{i}", class: "flex gap-2 py-0.5",
+                                span { class: "text-amber-500/70 select-none shrink-0 font-bold", ">" }
+                                span { class: "text-zinc-200", "{t}" }
                             }
                         },
                         TerminalEntry::Success(t) => rsx! {
-                            div { key: "{i}", class: "flex gap-2",
-                                span { class: "text-emerald-400 select-none shrink-0", "~" }
-                                span { class: "text-emerald-300/80", "{t}" }
+                            div { key: "{i}", class: "flex gap-2 py-0.5",
+                                span { class: "text-emerald-500/70 select-none shrink-0", "~" }
+                                span { class: "text-emerald-400/70", "{t}" }
                             }
                         },
                         TerminalEntry::Error(t) => rsx! {
-                            div { key: "{i}", class: "flex gap-2",
-                                span { class: "text-red-400 select-none shrink-0", "!" }
-                                span { class: "text-red-400/80", "{t}" }
+                            div { key: "{i}", class: "flex gap-2 py-0.5",
+                                span { class: "text-red-500/70 select-none shrink-0", "!" }
+                                span { class: "text-red-400/70", "{t}" }
                             }
                         },
                     }
@@ -115,8 +116,8 @@ pub fn Terminal(
             }
 
             // Input bar
-            div { class: "flex items-center gap-2 px-4 py-3 border-t border-white/10 bg-[#111]",
-                span { class: "text-orange-400 font-mono text-sm select-none shrink-0", ">" }
+            div { class: "flex items-center gap-2 px-4 py-2.5 border-t border-white/[0.06] bg-white/[0.02]",
+                span { class: "text-amber-500/60 font-mono text-sm select-none shrink-0 font-bold", ">" }
                 input {
                     id: "code-input",
                     r#type: "text",
@@ -124,8 +125,8 @@ pub fn Terminal(
                     spellcheck: "false",
                     autofocus: true,
                     disabled: compiling,
-                    class: "flex-1 bg-transparent outline-none text-zinc-200 font-mono text-[13px] placeholder:text-zinc-700 caret-orange-400",
-                    placeholder: if compiling { "Compiling..." } else { "Type Rust code here..." },
+                    class: "flex-1 bg-transparent outline-none text-zinc-200 font-mono text-[13px] placeholder:text-zinc-700 caret-amber-400",
+                    placeholder: if compiling { "Compiling..." } else { "Type Rust code..." },
                     value: "{code_input}",
                     oninput: move |e| { code_input.set(e.value()); },
                     onkeydown: move |e| {
@@ -138,7 +139,7 @@ pub fn Terminal(
                     },
                 }
                 if compiling {
-                    div { class: "w-4 h-4 border-2 border-orange-400/40 border-t-orange-400 rounded-full animate-spin shrink-0" }
+                    div { class: "w-3.5 h-3.5 border-[1.5px] border-amber-500/30 border-t-amber-400 rounded-full animate-spin shrink-0" }
                 }
             }
         }
