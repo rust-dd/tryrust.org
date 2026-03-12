@@ -21,3 +21,4 @@ style/output.css
 package-lock.json
 
 .zed/
+.claude

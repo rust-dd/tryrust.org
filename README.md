@@ -8,47 +8,43 @@ Welcome to the interactive tutorial project, [tryrust.org](https://tryrust.org),
 
 > **Note:** We continuously update the number of tutorials. It is still in progress.
 
-If you want to run it locally, execute the commands below.
+## Tech Stack
+
+- **Frontend & Backend:** [Dioxus](https://dioxuslabs.com) 0.7 (fullstack, Rust + WASM)
+- **Styling:** [Tailwind CSS](https://tailwindcss.com) v4
+- **Package Manager:** Yarn
+- **Rust Edition:** 2024
 
 ## Running the project
 
-To get started with running the project locally, you will need to execute the following commands. These commands will help you compile your stylesheets and watch for changes in the project.
-
-
-First, compile the CSS using TailwindCSS:
+Install dependencies:
 
 ```bash
-npm install
-npx tailwindcss -i input.css -o ./style/output.css --watch
+yarn install
+cargo install dioxus-cli
 ```
 
-Next, run the Leptos development server to watch changes and automatically reload:
+Run the dev server (Tailwind CSS is automatically handled by `dx` via `asset!()`):
 
 ```bash
-cargo leptos watch
+dx serve
 ```
 
 ## Compiling for Release
-```bash
-cargo leptos build --release
-```
 
-Will generate your server binary in target/server/release and the site package in target/site
+```bash
+dx build --release --platform fullstack
+```
 
 ## Docker
 
-For containerizing the application, build the Docker image with the following command:
+Build and run the Docker image:
 
 ```bash
 docker build . -t tryrust
-```
-
-Once the image is built, run it with:
-
-
-```bash
-docker run -p8080:8080 tryrust 
+docker run -p 8080:8080 tryrust
 ```
 
 ## Inspiration
+
 The site was inspired by [tryclojure.org](https://tryclojure.org) and [tryhaskell.org](https://tryhaskell.org).

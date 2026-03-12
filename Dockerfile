@@ -1,51 +1,38 @@
-# Stage 1: Build Environment with Rust nightly on Alpine
-FROM rustlang/rust:nightly-alpine as builder
+# Stage 1: Build
+FROM rustlang/rust:nightly-alpine AS builder
 
-# Install required packages
 RUN apk update && \
-    apk add --no-cache bash curl npm libc-dev binaryen
+    apk add --no-cache bash curl npm libc-dev binaryen clang openssl-dev openssl-libs-static pkgconfig
 
-# Install Tailwind CSS globally
-RUN npm install -g tailwindcss
-
-# Install a specific version of cargo-leptos
-ENV CARGO_LEPTOS_VERSION=0.2.22
-RUN curl -L https://github.com/leptos-rs/cargo-leptos/releases/download/v${CARGO_LEPTOS_VERSION}/cargo-leptos-installer.sh | sh
-
-# Add the WASM target
+RUN cargo install dioxus-cli --locked
 RUN rustup target add wasm32-unknown-unknown
 
-# Create working directory
 WORKDIR /work
 COPY . .
 
-# Install the required npm dependencies
-RUN npm install
+# Build Tailwind CSS
+RUN npm install && npx @tailwindcss/cli -i tailwind.css -o assets/tailwind.css --minify
 
-# Process Tailwind CSS
-RUN npx tailwindcss -i input.css -o ./style/output.css
+# Build fullstack app
+RUN dx bundle --release --fullstack
 
-# Build the application
-RUN cargo leptos build --release -vv
+# Stage 2: Runtime
+FROM rustlang/rust:nightly-alpine AS runner
 
-# Stage 2: Runtime Environment
-FROM rustlang/rust:nightly-alpine as runner
+RUN apk update && \
+    apk add --no-cache sed bash
+
+# Rustfmt is needed for code formatting in sessions
+RUN rustup component add rustfmt
 
 WORKDIR /app
 
-# Add the rustfmt component in the runtime stage
-RUN rustup component add rustfmt
+# Dioxus fullstack bundle output
+COPY --from=builder /work/target/dx/tryrust/release/web /app
 
-# Copy the server binary and site content from the builder stage
-COPY --from=builder /work/target/release/tryrust /app/
-COPY --from=builder /work/target/site /app/site
-COPY --from=builder /work/Cargo.toml /app/
-
-# Set environment variables
 ENV RUST_LOG="info"
-ENV LEPTOS_SITE_ADDR="0.0.0.0:8080"
-ENV LEPTOS_SITE_ROOT="site"
-EXPOSE 8080
+ENV IP="0.0.0.0"
+ENV PORT="8080"
 
-# Run the server
-CMD ["/app/tryrust"]
+EXPOSE 8080
+ENTRYPOINT ["/app/tryrust"]
