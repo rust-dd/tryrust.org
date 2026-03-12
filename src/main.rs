@@ -2,11 +2,13 @@ use dioxus::prelude::*;
 
 mod exercises;
 mod instruction;
+mod playground;
 mod server;
 mod terminal;
 
 use exercises::EXERCISES;
 use instruction::Instruction;
+use playground::Playground;
 use server::create_session;
 use terminal::Terminal;
 
@@ -28,6 +30,7 @@ fn App() -> Element {
     let mut active_tab = use_signal(|| 0u8); // mobile: 0=learn, 1=code
     let code_input = use_signal(|| String::new());
     let mut sidebar_open = use_signal(|| false);
+    let mut playground_mode = use_signal(|| false);
     let mut progress_loaded = use_signal(|| false);
 
     use_effect(move || {
@@ -104,6 +107,28 @@ fn App() -> Element {
                     }
                     img { src: RUST_LOGO, width: 24, height: 24, alt: "Rust logo" }
                     span { class: "text-sm font-semibold text-zinc-300", "Try Rust" }
+
+                    // Mode toggle
+                    div { class: "hidden md:flex items-center ml-1 bg-[#1c2333] rounded-md p-0.5",
+                        button {
+                            class: if !*playground_mode.read() {
+                                "px-2 py-0.5 text-[11px] font-medium rounded text-white bg-white/[0.08]"
+                            } else {
+                                "px-2 py-0.5 text-[11px] font-medium rounded text-zinc-500 hover:text-zinc-300 transition-colors"
+                            },
+                            onclick: move |_| { playground_mode.set(false); },
+                            "Exercises"
+                        }
+                        button {
+                            class: if *playground_mode.read() {
+                                "px-2 py-0.5 text-[11px] font-medium rounded text-white bg-white/[0.08]"
+                            } else {
+                                "px-2 py-0.5 text-[11px] font-medium rounded text-zinc-500 hover:text-zinc-300 transition-colors"
+                            },
+                            onclick: move |_| { playground_mode.set(true); },
+                            "Playground"
+                        }
+                    }
                 }
 
                 // Progress
@@ -146,12 +171,12 @@ fn App() -> Element {
             // Mobile tabs
             div { class: "md:hidden flex flex-shrink-0 border-b border-[#1c2333]",
                 button {
-                    class: if tab == 0 {
+                    class: if tab == 0 && !*playground_mode.read() {
                         "flex-1 py-2 text-xs font-medium text-emerald-400 border-b border-emerald-400"
                     } else {
                         "flex-1 py-2 text-xs font-medium text-zinc-600"
                     },
-                    onclick: move |_| active_tab.set(0),
+                    onclick: move |_| { active_tab.set(0); playground_mode.set(false); },
                     "Learn"
                 }
                 button {
@@ -162,6 +187,15 @@ fn App() -> Element {
                     },
                     onclick: move |_| active_tab.set(1),
                     "Terminal"
+                }
+                button {
+                    class: if tab == 0 && *playground_mode.read() {
+                        "flex-1 py-2 text-xs font-medium text-emerald-400 border-b border-emerald-400"
+                    } else {
+                        "flex-1 py-2 text-xs font-medium text-zinc-600"
+                    },
+                    onclick: move |_| { active_tab.set(0); playground_mode.set(true); },
+                    "Playground"
                 }
             }
 
@@ -251,14 +285,18 @@ fn App() -> Element {
                         Terminal { session_id, exercise_idx, step_idx, code_input }
                     }
 
-                    // Exercise catalog (right)
+                    // Right panel: exercise catalog or playground
                     div {
                         class: if tab == 0 {
                             "flex-1 flex flex-col min-h-0 md:flex md:w-[420px] md:max-w-[420px] md:shrink-0 md:flex-none md:border-l md:border-[#1c2333]"
                         } else {
                             "hidden md:flex md:w-[420px] md:max-w-[420px] md:shrink-0 md:flex-none md:flex-col md:min-h-0 md:border-l md:border-[#1c2333]"
                         },
-                        Instruction { exercise_idx, step_idx, code_input }
+                        if *playground_mode.read() {
+                            Playground { session_id }
+                        } else {
+                            Instruction { exercise_idx, step_idx, code_input }
+                        }
                     }
                 }
             }

@@ -139,6 +139,7 @@ pub fn Instruction(
     let st_i = *step_idx.read();
     let total = EXERCISES.len();
     let mut hint_shown: Signal<Option<(usize, usize)>> = use_signal(|| None);
+    let mut theory_open: Signal<Option<usize>> = use_signal(|| None);
 
     // Auto-scroll to current exercise
     use_effect(move || {
@@ -246,8 +247,36 @@ pub fn Instruction(
                                                             rsx! {
                                                                 div { class: "px-4 pb-3 fade-in",
                                                                     // Description
-                                                                    p { class: "text-[12px] text-zinc-500 leading-relaxed pl-6 mb-3",
+                                                                    p { class: "text-[12px] text-zinc-500 leading-relaxed pl-6 mb-2",
                                                                         "{exercise.description}"
+                                                                    }
+
+                                                                    // Theory
+                                                                    {
+                                                                        let is_theory_open = *theory_open.read() == Some(exercise_index);
+                                                                        rsx! {
+                                                                            div { class: "pl-6 mb-3",
+                                                                                button {
+                                                                                    class: "text-[10px] text-zinc-600 hover:text-blue-400 transition-colors flex items-center gap-1",
+                                                                                    onclick: move |_| {
+                                                                                        if is_theory_open {
+                                                                                            theory_open.set(None);
+                                                                                        } else {
+                                                                                            theory_open.set(Some(exercise_index));
+                                                                                        }
+                                                                                    },
+                                                                                    span { class: "text-[9px]",
+                                                                                        if is_theory_open { "▾" } else { "▸" }
+                                                                                    }
+                                                                                    if is_theory_open { "Hide theory" } else { "Theory" }
+                                                                                }
+                                                                                if is_theory_open {
+                                                                                    p { class: "text-[11px] text-zinc-400 leading-relaxed mt-1.5 bg-blue-500/5 rounded px-2.5 py-2 border-l-2 border-blue-500/20 fade-in",
+                                                                                        "{exercise.theory}"
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
                                                                     }
 
                                                                     // Steps

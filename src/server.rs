@@ -111,3 +111,57 @@ pub async fn compile(session_id: String, code: String) -> Result<String, ServerF
 
     Ok(String::from_utf8_lossy(&output.stdout).to_string())
 }
+
+#[server]
+pub async fn run_playground(session_id: String, code: String) -> Result<String, ServerFnError> {
+    use regex::Regex;
+    use std::fs;
+    use std::process::Stdio;
+    use tokio::process::Command;
+
+    let file_path = format!("./sessions/{}/src/main.rs", session_id);
+
+    // Write the full code (wrap in main if needed)
+    let full_code = if code.contains("fn main") {
+        code.clone()
+    } else {
+        format!("fn main() {{\n{code}\n}}")
+    };
+
+    fs::write(&file_path, &full_code).map_err(|e| {
+        tracing::error!("Error writing playground file: {:?}", e);
+        ServerFnError::new("Error writing source file")
+    })?;
+
+    let command = format!(
+        "rustfmt -- {file_path} && cargo run --manifest-path ./sessions/{session_id}/Cargo.toml -- --name tryrust-{session_id}"
+    );
+
+    let mut cmd = Command::new("sh");
+    cmd.arg("-c")
+        .arg(&command)
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped());
+
+    let output = cmd.output().await.map_err(|e| {
+        tracing::error!("Error executing playground: {:?}", e);
+        ServerFnError::new("Error executing command")
+    })?;
+
+    if !output.status.success() {
+        let cargo_stderr = String::from_utf8_lossy(&output.stderr);
+        let re = Regex::new(r"error.+").unwrap();
+        let errors: Vec<&str> = re
+            .find_iter(&cargo_stderr)
+            .map(|mat| mat.as_str())
+            .collect();
+
+        if !errors.is_empty() {
+            return Ok(errors.join("\n"));
+        } else {
+            return Ok(cargo_stderr.to_string());
+        }
+    }
+
+    Ok(String::from_utf8_lossy(&output.stdout).to_string())
+}

@@ -12,6 +12,7 @@ pub struct ExerciseStep {
 pub struct Exercise {
     pub title: &'static str,
     pub description: &'static str,
+    pub theory: &'static str,
     pub category: &'static str,
     pub steps: &'static [ExerciseStep],
 }
@@ -21,6 +22,7 @@ pub static EXERCISES: &[Exercise] = &[
     Exercise {
         title: "Hello, World!",
         description: "Every journey starts with Hello World. Rust uses macros (ending with !) for formatted output. println! writes to stdout with a newline.",
+        theory: "In Rust, println! is a macro, not a function — notice the !. Macros can take a variable number of arguments and are expanded at compile time. The string inside is a format string, similar to printf in C.",
         category: "Basics",
         steps: &[ExerciseStep {
             label: "Print \"Hello, world!\" to the console",
@@ -33,6 +35,7 @@ pub static EXERCISES: &[Exercise] = &[
     Exercise {
         title: "Variables & Types",
         description: "Rust is statically typed. Variables are immutable by default. Use `let` to declare, and add type annotations when needed. Rust has integers (i32, u64, usize...), floats (f32, f64), booleans, and chars.",
+        theory: "Variables are declared with let and are immutable by default. Rust is statically typed — the compiler must know every variable's type at compile time. Type annotations use : Type syntax. Common types: i32, f64, bool, char (Unicode scalar).",
         category: "Basics",
         steps: &[
             ExerciseStep {
@@ -71,6 +74,7 @@ pub static EXERCISES: &[Exercise] = &[
     Exercise {
         title: "Mutability",
         description: "Variables are immutable by default in Rust. Use `mut` to allow changes. This design choice helps prevent bugs — you only opt into mutability when you actually need it.",
+        theory: "By default, variables in Rust are immutable — you cannot change their value after binding. This prevents bugs and makes code easier to reason about. Add mut after let to make a variable mutable. The compiler warns if mut is unused.",
         category: "Basics",
         steps: &[
             ExerciseStep {
@@ -103,6 +107,7 @@ pub static EXERCISES: &[Exercise] = &[
     Exercise {
         title: "Strings",
         description: "Rust has two main string types: `String` (owned, heap-allocated, growable) and `&str` (borrowed string slice). String literals are `&str`. Use `.to_string()` or `String::from()` to create owned strings.",
+        theory: "Rust has two string types: String (owned, growable, heap) and &str (borrowed slice). Both are UTF-8. Use .to_string() or String::from() to create a String. Use format!() for concatenation. Direct byte indexing is not allowed.",
         category: "Basics",
         steps: &[
             ExerciseStep {
@@ -141,6 +146,7 @@ pub static EXERCISES: &[Exercise] = &[
     Exercise {
         title: "Tuples & Destructuring",
         description: "Tuples group values of different types into one compound type. Access elements by index (tuple.0) or destructure them with pattern matching. Tuples are useful for returning multiple values from a function.",
+        theory: "Tuples group values of different types: (i32, f64, bool). Access with .0, .1. Arrays hold same-type values with fixed length: [i32; 5]. Indexing uses []. Rust panics on out-of-bounds access at runtime.",
         category: "Basics",
         steps: &[
             ExerciseStep {
@@ -173,6 +179,7 @@ pub static EXERCISES: &[Exercise] = &[
     Exercise {
         title: "Arrays & Iteration",
         description: "Arrays have a fixed size and contain elements of the same type. Use `[T; N]` syntax. Iterate with `for..in` or use iterator methods like `.iter()`, `.map()`, `.filter()`.",
+        theory: "Arrays have a fixed size known at compile time: [T; N]. Access elements with [] indexing. Use .iter() to iterate over elements. Rust checks array bounds at runtime and panics on out-of-bounds access. For growable collections, use Vec instead.",
         category: "Basics",
         steps: &[
             ExerciseStep {
@@ -211,6 +218,7 @@ pub static EXERCISES: &[Exercise] = &[
     Exercise {
         title: "Vectors",
         description: "Vec<T> is Rust's growable array type. Unlike arrays, vectors can change size at runtime. Use `vec![]` macro or `Vec::new()` to create them. Vectors are one of the most used collections in Rust.",
+        theory: "Vec<T> is a growable array on the heap. Create with Vec::new() or vec![]. push() adds elements, [] or get() accesses them. get() returns Option<&T> (safe), while [] panics on out-of-bounds.",
         category: "Basics",
         steps: &[
             ExerciseStep {
@@ -243,6 +251,7 @@ pub static EXERCISES: &[Exercise] = &[
     Exercise {
         title: "Control Flow",
         description: "Rust has `if/else`, `loop`, `while`, and `for`. Notably, `if` is an expression — it returns a value. There's no ternary operator because `if/else` already fills that role.",
+        theory: "Rust has if/else (which is an expression — it returns a value), loop (infinite loop), while (conditional loop), and for..in (iterator loop). There is no ternary operator; use if/else instead. break exits loops and can return a value from loop.",
         category: "Basics",
         steps: &[
             ExerciseStep {
@@ -275,6 +284,7 @@ pub static EXERCISES: &[Exercise] = &[
     Exercise {
         title: "Functions",
         description: "Functions are declared with `fn`. Parameters need type annotations. The return type follows `->`. Rust functions return the last expression implicitly (no semicolon = return value).",
+        theory: "Functions are declared with fn. Parameters require type annotations. The return type follows ->. Rust is expression-based: the last expression without ; becomes the return value. Adding ; turns it into a statement returning ().",
         category: "Intermediate",
         steps: &[
             ExerciseStep {
@@ -307,6 +317,7 @@ pub static EXERCISES: &[Exercise] = &[
     Exercise {
         title: "Closures",
         description: "Closures are anonymous functions that can capture variables from their environment. They use `|params|` syntax. Closures are widely used with iterator methods like `.map()`, `.filter()`, and `.for_each()`.",
+        theory: "Closures are anonymous functions that capture their environment. Syntax: |x, y| x + y. They implement Fn (borrow), FnMut (borrow mutably), or FnOnce (take ownership). The compiler infers which trait based on how captured values are used.",
         category: "Intermediate",
         steps: &[
             ExerciseStep {
@@ -339,6 +350,7 @@ pub static EXERCISES: &[Exercise] = &[
     Exercise {
         title: "Ownership",
         description: "Ownership is Rust's most unique feature. Each value has exactly one owner. When the owner goes out of scope, the value is dropped. Assigning or passing a heap value moves it — the original variable becomes invalid.",
+        theory: "Ownership is Rust's key feature. Rules: each value has one owner, when the owner goes out of scope the value is dropped, assigning moves the value (for heap data). This eliminates garbage collection while preventing memory leaks.",
         category: "Intermediate",
         steps: &[
             ExerciseStep {
@@ -377,6 +389,7 @@ pub static EXERCISES: &[Exercise] = &[
     Exercise {
         title: "References & Borrowing",
         description: "References let you use a value without taking ownership. `&T` is an immutable reference, `&mut T` is a mutable one. Rule: you can have many &T OR one &mut T, never both at the same time.",
+        theory: "References let you use a value without taking ownership. &x creates an immutable reference, &mut x a mutable one. Rule: you can have one mutable reference OR any number of immutable references. This prevents data races at compile time.",
         category: "Intermediate",
         steps: &[
             ExerciseStep {
@@ -409,6 +422,7 @@ pub static EXERCISES: &[Exercise] = &[
     Exercise {
         title: "Structs",
         description: "Structs let you create custom data types by grouping related values. Define methods and associated functions with `impl` blocks. Derive macros like `#[derive(Debug)]` add common trait implementations automatically.",
+        theory: "Structs create custom types with named fields. Define with struct Name { field: Type }. Add methods with impl Name { fn method(&self) {} }. The &self parameter borrows the struct. Use &mut self for methods that modify fields.",
         category: "Intermediate",
         steps: &[
             ExerciseStep {
@@ -441,6 +455,7 @@ pub static EXERCISES: &[Exercise] = &[
     Exercise {
         title: "Enums & Pattern Matching",
         description: "Enums define a type with multiple variants. Combined with `match`, they're incredibly powerful. Rust's `match` must be exhaustive — you must handle every possible variant, making your code safer.",
+        theory: "Enums define a type with several variants. Unlike C, Rust enum variants can hold data: enum Shape { Circle(f64), Rect(f64, f64) }. match is exhaustive — you must handle every variant. The compiler catches missing cases.",
         category: "Intermediate",
         steps: &[
             ExerciseStep {
@@ -473,6 +488,7 @@ pub static EXERCISES: &[Exercise] = &[
     Exercise {
         title: "Option & Result",
         description: "Rust has no null. Instead, `Option<T>` represents an optional value (Some or None) and `Result<T, E>` represents success or failure. Use pattern matching or methods like `.unwrap_or()` to handle them.",
+        theory: "Rust has no null. Option<T> is either Some(value) or None — used when a value might be absent. Result<T, E> is either Ok(value) or Err(error) — used for operations that can fail. Both force you to handle all cases, preventing null pointer bugs.",
         category: "Intermediate",
         steps: &[
             ExerciseStep {
@@ -505,6 +521,7 @@ pub static EXERCISES: &[Exercise] = &[
     Exercise {
         title: "Error Handling",
         description: "Rust encourages explicit error handling with Result<T, E>. The `?` operator propagates errors automatically. Custom error types help create clear, maintainable error handling throughout your application.",
+        theory: "Rust has no exceptions. Use Result<T, E> for recoverable errors and panic! for unrecoverable ones. Result has Ok(value) and Err(error). The ? operator propagates errors. unwrap() gets the value but panics on Err.",
         category: "Intermediate",
         steps: &[
             ExerciseStep {
@@ -537,6 +554,7 @@ pub static EXERCISES: &[Exercise] = &[
     Exercise {
         title: "Traits",
         description: "Traits define shared behavior — similar to interfaces in other languages. Types implement traits to provide specific behavior. Trait bounds let you write generic code that works with any type implementing required traits.",
+        theory: "Traits define shared behavior — similar to interfaces. Define with trait Name { fn method(&self); }. Implement with impl Trait for Type. Traits can have default implementations. Use trait bounds to constrain generic types.",
         category: "Advanced",
         steps: &[
             ExerciseStep {
@@ -575,6 +593,7 @@ pub static EXERCISES: &[Exercise] = &[
     Exercise {
         title: "Generics",
         description: "Generics let you write code that works with multiple types. Combine with trait bounds to constrain what types are accepted. Rust monomorphizes generics at compile time — zero runtime cost!",
+        theory: "Generics let you write code for multiple types. Use <T> as type parameter: fn largest<T>(list: &[T]) -> &T. Add bounds to constrain types: <T: PartialOrd>. Rust monomorphizes generics at compile time — zero runtime cost.",
         category: "Advanced",
         steps: &[
             ExerciseStep {
@@ -601,6 +620,7 @@ pub static EXERCISES: &[Exercise] = &[
     Exercise {
         title: "Iterator Magic",
         description: "Rust's iterators are lazy and composable. Chain methods like .map(), .filter(), .fold() to build powerful data pipelines. The compiler optimizes them into efficient loops — zero-cost abstractions!",
+        theory: "Iterators produce values lazily. Call .iter() on collections. Chain adapters: .map(), .filter(), .enumerate(). Consume with .collect(), .sum(), .for_each(). Iterators are zero-cost abstractions — same performance as hand-written loops.",
         category: "Advanced",
         steps: &[
             ExerciseStep {
@@ -633,6 +653,7 @@ pub static EXERCISES: &[Exercise] = &[
     Exercise {
         title: "HashMaps",
         description: "HashMap<K, V> stores key-value pairs with O(1) average lookup. Import from std::collections. Use .entry() API for elegant insert-or-update patterns.",
+        theory: "HashMap<K, V> stores key-value pairs with O(1) lookup. Import from std::collections. insert() adds entries, get() returns Option<&V>. The entry() API handles insert-or-update patterns elegantly.",
         category: "Advanced",
         steps: &[
             ExerciseStep {
@@ -665,6 +686,7 @@ pub static EXERCISES: &[Exercise] = &[
     Exercise {
         title: "Operator Overloading",
         description: "Rust lets you overload operators by implementing traits from std::ops. Add custom + - * behavior to your types. The Debug trait with #[derive] gives you printable output.",
+        theory: "Overload operators by implementing std::ops traits: Add for +, Mul for *, Index for []. The Display trait (std::fmt::Display) defines how a type prints with {} in format strings. Derive Debug for developer-facing output with {:?}.",
         category: "Advanced",
         steps: &[
             ExerciseStep {
@@ -697,6 +719,7 @@ pub static EXERCISES: &[Exercise] = &[
     Exercise {
         title: "Mini Project: Temp Converter",
         description: "Build a temperature converter! This mini project combines functions, formatting, and f64 arithmetic. You'll create functions to convert between Celsius and Fahrenheit.",
+        theory: "Convert between Celsius and Fahrenheit. Practice f64 arithmetic and formatted output with precision control ({:.1}). Formula: °F = °C × 9/5 + 32.",
         category: "Projects",
         steps: &[
             ExerciseStep {
@@ -735,6 +758,7 @@ pub static EXERCISES: &[Exercise] = &[
     Exercise {
         title: "Mini Project: FizzBuzz",
         description: "The classic FizzBuzz challenge in Rust! Print numbers 1-20, but replace multiples of 3 with 'Fizz', multiples of 5 with 'Buzz', and multiples of both with 'FizzBuzz'.",
+        theory: "FizzBuzz is a classic programming exercise. Practice for loops, the modulo operator (%), and conditional logic. In Rust, use if/else if/else chains or match to handle the three cases: divisible by 3, by 5, or by both.",
         category: "Projects",
         steps: &[
             ExerciseStep {
@@ -755,6 +779,7 @@ pub static EXERCISES: &[Exercise] = &[
     Exercise {
         title: "Mini Project: Word Counter",
         description: "Build a word frequency counter using HashMap! This project practices string manipulation, HashMaps, iterators, and sorting — common patterns in real Rust programs.",
+        theory: "Count word frequencies using HashMap. Split strings, normalize with to_lowercase(), and use the entry() API for counting. Exercises iterators, string processing, and collections.",
         category: "Projects",
         steps: &[
             ExerciseStep {
@@ -787,6 +812,7 @@ pub static EXERCISES: &[Exercise] = &[
     Exercise {
         title: "Mini Project: Fibonacci",
         description: "Implement Fibonacci numbers using both iterative and functional approaches. Compare how Rust lets you write the same algorithm in different styles, all with the same performance.",
+        theory: "The Fibonacci sequence (0, 1, 1, 2, 3, 5, 8...) is great for practicing loops and recursion. In Rust, you can implement it iteratively with a loop and tuple swapping, or functionally using iterators and .take().collect().",
         category: "Projects",
         steps: &[
             ExerciseStep {
@@ -813,6 +839,7 @@ pub static EXERCISES: &[Exercise] = &[
     Exercise {
         title: "Mini Project: Calculator",
         description: "Build a calculator using enums and pattern matching! This project demonstrates how Rust's type system lets you model operations cleanly and handle all cases exhaustively.",
+        theory: "This project combines parsing, error handling, and pattern matching. Parse input into numbers and operators, use match for the operation, and handle edge cases like division by zero.",
         category: "Projects",
         steps: &[
             ExerciseStep {
@@ -845,6 +872,7 @@ pub static EXERCISES: &[Exercise] = &[
     Exercise {
         title: "Mini Project: Stack",
         description: "Build a generic Stack data structure from scratch! This project combines generics, Option, Vec, and methods to create a reusable collection type — a common pattern in real Rust libraries.",
+        theory: "Implement a generic stack using Vec<T>. Practice generics, Option<T> returns, and method design. A stack is LIFO — push adds to top, pop removes from top.",
         category: "Projects",
         steps: &[
             ExerciseStep {
