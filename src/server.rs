@@ -45,37 +45,41 @@ pub async fn compile(session_id: String, code: String) -> Result<String, ServerF
     let file_path = format!("./sessions/{}/src/main.rs", session_id);
     let backup_path = format!("./sessions/{}/src/main.rs.bak", session_id);
 
-    let _ = fs::copy(&file_path, &backup_path).map_err(|e| {
-        tracing::error!("Error creating backup: {:?}", e);
-        ServerFnError::new("Error creating backup")
-    });
+    let _ = fs::copy(&file_path, &backup_path);
 
-    let sed_command = if cfg!(target_os = "macos") {
-        "gsed"
-    } else {
-        "sed"
-    };
-    let modified_code = format!("{};", code);
-    let commands = vec![
-        format!(
-            "{} -i '/^    print/ s/^\\(.*\\)$/\\/\\/\\1/g' {}",
-            sed_command, file_path
-        ),
-        format!(
-            "{} -i '/();$/ s/^\\(.*\\)$/\\/\\/\\1/g' {}",
-            sed_command, file_path
-        ),
-        format!(
-            "{} -i '$i\\{}' {}",
-            sed_command, modified_code, file_path
-        ),
-        format!("rustfmt -- {}", file_path),
-        format!(
-            "cargo run --manifest-path ./sessions/{0}/Cargo.toml -- --name tryrust-{0}",
-            session_id
-        ),
-    ];
-    let command = commands.join(" && ");
+    // Modify the source file using Rust I/O (avoids shell escaping issues with sed)
+    let content = fs::read_to_string(&file_path).map_err(|e| {
+        tracing::error!("Error reading file: {:?}", e);
+        ServerFnError::new("Error reading source file")
+    })?;
+
+    let mut lines: Vec<String> = content.lines().map(String::from).collect();
+
+    // Comment out print statements and lines ending with ();
+    for line in &mut lines {
+        if line.starts_with("    print") || line.ends_with("();") {
+            *line = format!("//{line}");
+        }
+    }
+
+    // Insert new code before the closing brace of main()
+    let modified_code = format!("    {};", code);
+    let insert_pos = lines
+        .iter()
+        .rposition(|l| l.trim() == "}")
+        .unwrap_or(lines.len());
+    lines.insert(insert_pos, modified_code);
+
+    let new_content = lines.join("\n") + "\n";
+    fs::write(&file_path, &new_content).map_err(|e| {
+        tracing::error!("Error writing file: {:?}", e);
+        ServerFnError::new("Error writing source file")
+    })?;
+
+    // Format and compile
+    let command = format!(
+        "rustfmt -- {file_path} && cargo run --manifest-path ./sessions/{session_id}/Cargo.toml -- --name tryrust-{session_id}"
+    );
 
     let mut cmd = Command::new("sh");
     cmd.arg("-c")

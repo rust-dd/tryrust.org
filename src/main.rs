@@ -28,6 +28,7 @@ fn App() -> Element {
     let mut active_tab = use_signal(|| 0u8); // mobile: 0=learn, 1=code
     let code_input = use_signal(|| String::new());
     let mut sidebar_open = use_signal(|| false);
+    let mut progress_loaded = use_signal(|| false);
 
     use_effect(move || {
         spawn(async move {
@@ -35,6 +36,32 @@ fn App() -> Element {
                 session_id.set(id);
             }
         });
+    });
+
+    // Load progress from localStorage
+    use_effect(move || {
+        spawn(async move {
+            let eval = document::eval("localStorage.getItem('tryrust_progress')");
+            if let Ok(val) = eval.await {
+                if let Some(s) = val.as_str() {
+                    if let Ok(idx) = s.parse::<usize>() {
+                        if idx > 0 && idx <= EXERCISES.len() {
+                            exercise_idx.set(idx);
+                        }
+                    }
+                }
+            }
+            progress_loaded.set(true);
+        });
+    });
+
+    // Save progress to localStorage
+    use_effect(move || {
+        let idx = *exercise_idx.read();
+        let loaded = *progress_loaded.read();
+        if loaded {
+            document::eval(&format!("localStorage.setItem('tryrust_progress','{}')", idx));
+        }
     });
 
     let tab = *active_tab.read();
@@ -88,6 +115,18 @@ fn App() -> Element {
                         }
                     }
                     span { class: "text-[11px] text-zinc-500 tabular-nums", "{completed}/{total}" }
+                    if completed > 0 {
+                        button {
+                            class: "text-[10px] text-zinc-700 hover:text-zinc-400 transition-colors ml-1",
+                            title: "Reset all progress",
+                            onclick: move |_| {
+                                exercise_idx.set(0);
+                                step_idx.set(0);
+                                document::eval("localStorage.removeItem('tryrust_progress')");
+                            },
+                            "Reset"
+                        }
+                    }
                 }
 
                 // GitHub

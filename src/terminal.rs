@@ -8,6 +8,7 @@ pub enum TerminalEntry {
     Input(String),
     Success(String),
     Error(String),
+    System(String),
 }
 
 #[component]
@@ -19,12 +20,26 @@ pub fn Terminal(
 ) -> Element {
     let mut history: Signal<Vec<TerminalEntry>> = use_signal(Vec::new);
     let mut is_compiling = use_signal(|| false);
+    let mut cmd_history: Signal<Vec<String>> = use_signal(Vec::new);
+    let mut history_pos: Signal<Option<usize>> = use_signal(|| None);
 
     let submit = move |()| async move {
         let code = code_input.read().trim().to_string();
         if code.is_empty() || *is_compiling.read() {
             return;
         }
+
+        // Add to command history
+        cmd_history.write().push(code.clone());
+        history_pos.set(None);
+
+        // Handle "clear" command
+        if code.to_lowercase() == "clear" {
+            history.write().clear();
+            code_input.set(String::new());
+            return;
+        }
+
         let sid = session_id.read().clone();
         if sid.is_empty() {
             return;
@@ -57,6 +72,9 @@ pub fn Terminal(
                             } else {
                                 step_idx.set(0);
                                 exercise_idx.set(ex_i + 1);
+                                history.write().push(TerminalEntry::System(
+                                    format!("Exercise complete: {}", exercise.title),
+                                ));
                             }
                         }
                     }
@@ -85,9 +103,19 @@ pub fn Terminal(
 
                 // Welcome
                 if history.read().is_empty() {
-                    div { class: "flex flex-col gap-1 mb-4",
-                        span { class: "text-zinc-600", "// Welcome to Try Rust" }
-                        span { class: "text-zinc-700", "// Click a code snippet on the right, or type below" }
+                    div { class: "flex flex-col gap-2 mb-4 fade-in",
+                        div { class: "flex items-center gap-2 mb-1",
+                            span { class: "text-amber-500/80 text-lg font-bold", ">" }
+                            span { class: "text-zinc-400 font-semibold", "Try Rust" }
+                            span { class: "text-zinc-700 text-[11px]", "v1.0" }
+                        }
+                        span { class: "text-zinc-600 text-[12px]", "Interactive Rust tutorial in your browser." }
+                        span { class: "text-zinc-700 text-[12px]", "Click a code snippet on the right, or type below." }
+                        div { class: "flex gap-3 mt-1",
+                            span { class: "text-zinc-700 text-[11px]", "arrow-up/down history" }
+                            span { class: "text-zinc-800", "·" }
+                            span { class: "text-zinc-700 text-[11px]", "\"clear\" to reset" }
+                        }
                     }
                 }
 
@@ -111,6 +139,12 @@ pub fn Terminal(
                                 span { class: "text-red-400/70", "{t}" }
                             }
                         },
+                        TerminalEntry::System(t) => rsx! {
+                            div { key: "{i}", class: "flex gap-2 py-0.5 celebrate",
+                                span { class: "text-amber-400/70 select-none shrink-0", "*" }
+                                span { class: "text-amber-300/80 font-medium", "{t}" }
+                            }
+                        },
                     }
                 }
             }
@@ -130,11 +164,44 @@ pub fn Terminal(
                     value: "{code_input}",
                     oninput: move |e| { code_input.set(e.value()); },
                     onkeydown: move |e| {
-                        if e.key() == Key::Enter {
-                            let val = code_input.read().clone();
-                            if !val.trim().is_empty() && !compiling {
-                                spawn(submit(()));
+                        match e.key() {
+                            Key::Enter => {
+                                let val = code_input.read().clone();
+                                if !val.trim().is_empty() && !compiling {
+                                    spawn(submit(()));
+                                }
                             }
+                            Key::ArrowUp => {
+                                e.prevent_default();
+                                let hist = cmd_history.read();
+                                if hist.is_empty() { return; }
+                                let pos = match *history_pos.read() {
+                                    Some(p) if p > 0 => p - 1,
+                                    Some(0) => 0,
+                                    None => hist.len() - 1,
+                                    _ => 0,
+                                };
+                                code_input.set(hist[pos].clone());
+                                drop(hist);
+                                history_pos.set(Some(pos));
+                            }
+                            Key::ArrowDown => {
+                                e.prevent_default();
+                                let pos = *history_pos.read();
+                                if let Some(p) = pos {
+                                    let hist = cmd_history.read();
+                                    if p + 1 < hist.len() {
+                                        code_input.set(hist[p + 1].clone());
+                                        drop(hist);
+                                        history_pos.set(Some(p + 1));
+                                    } else {
+                                        drop(hist);
+                                        code_input.set(String::new());
+                                        history_pos.set(None);
+                                    }
+                                }
+                            }
+                            _ => {}
                         }
                     },
                 }
