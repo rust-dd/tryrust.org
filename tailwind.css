@@ -18,8 +18,8 @@
 }
 
 @keyframes step-pulse {
-  0%, 100% { border-color: rgba(245, 158, 11, 0.2); }
-  50% { border-color: rgba(245, 158, 11, 0.4); }
+  0%, 100% { border-color: rgba(251, 220, 142, 0.2); }
+  50% { border-color: rgba(251, 220, 142, 0.4); }
 }
 
 @keyframes celebrate {

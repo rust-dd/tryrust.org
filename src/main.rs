@@ -92,18 +92,18 @@ fn App() -> Element {
         document::Link { rel: "canonical", href: "https://tryrust.org" }
         document::Link { rel: "icon", href: FAVICON, r#type: "image/x-icon" }
 
-        div { class: "h-[100dvh] flex flex-col bg-[#0e1117] text-white overflow-hidden",
+        div { class: "h-[100dvh] flex flex-col bg-[#0d0d0e] text-white overflow-hidden",
 
             // Progress bar - top of page
-            div { class: "w-full h-0.5 bg-[#1c2333] flex-shrink-0",
+            div { class: "w-full h-0.5 bg-[#202126] flex-shrink-0",
                 div {
-                    class: "h-full bg-emerald-500 transition-all duration-500",
+                    class: "h-full bg-gradient-to-r from-[#4cf490] to-[#8a38f5] transition-all duration-500",
                     style: "width: {((completed as f64 / total as f64) * 100.0) as u32}%",
                 }
             }
 
             // Top bar
-            header { class: "flex items-center justify-between px-4 py-2 border-b border-[#1c2333] flex-shrink-0",
+            header { class: "flex items-center justify-between px-4 py-2 border-b border-[#202126] flex-shrink-0",
                 div { class: "flex items-center gap-3",
                     // Menu button (toggles sidebar)
                     button {
@@ -117,7 +117,7 @@ fn App() -> Element {
                     span { class: "text-sm font-semibold text-zinc-300", "Try Rust" }
 
                     // Mode toggle
-                    div { class: "hidden md:flex items-center ml-1 bg-[#1c2333] rounded-md p-0.5",
+                    div { class: "hidden md:flex items-center ml-1 bg-[#202126] rounded-md p-0.5",
                         button {
                             class: if !*playground_mode.read() {
                                 "px-2 py-0.5 text-[11px] font-medium rounded text-white bg-white/[0.08]"
@@ -156,10 +156,10 @@ fn App() -> Element {
             }
 
             // Mobile tabs
-            div { class: "md:hidden flex flex-shrink-0 border-b border-[#1c2333]",
+            div { class: "md:hidden flex flex-shrink-0 border-b border-[#202126]",
                 button {
                     class: if tab == 0 && !*playground_mode.read() {
-                        "flex-1 py-2 text-xs font-medium text-emerald-400 border-b border-emerald-400"
+                        "flex-1 py-2 text-xs font-medium text-[#4cf490] border-b border-[#4cf490]"
                     } else {
                         "flex-1 py-2 text-xs font-medium text-zinc-600"
                     },
@@ -168,7 +168,7 @@ fn App() -> Element {
                 }
                 button {
                     class: if tab == 1 {
-                        "flex-1 py-2 text-xs font-medium text-emerald-400 border-b border-emerald-400"
+                        "flex-1 py-2 text-xs font-medium text-[#4cf490] border-b border-[#4cf490]"
                     } else {
                         "flex-1 py-2 text-xs font-medium text-zinc-600"
                     },
@@ -177,7 +177,7 @@ fn App() -> Element {
                 }
                 button {
                     class: if tab == 0 && *playground_mode.read() {
-                        "flex-1 py-2 text-xs font-medium text-emerald-400 border-b border-emerald-400"
+                        "flex-1 py-2 text-xs font-medium text-[#4cf490] border-b border-[#4cf490]"
                     } else {
                         "flex-1 py-2 text-xs font-medium text-zinc-600"
                     },
@@ -191,7 +191,7 @@ fn App() -> Element {
 
                 // Sidebar - course outline (desktop only)
                 if show_sidebar {
-                    div { class: "hidden md:flex md:flex-col w-56 border-r border-[#1c2333] bg-[#0c0f16] overflow-y-auto shrink-0",
+                    div { class: "hidden md:flex md:flex-col w-56 border-r border-[#202126] bg-[#141416] overflow-y-auto shrink-0",
                         div { class: "p-3",
                             for cat in CATEGORIES.iter() {
                                 {
@@ -203,10 +203,10 @@ fn App() -> Element {
                                         .collect();
 
                                     let dot_color = match cat_name {
-                                        "Basics" => "bg-emerald-500",
-                                        "Intermediate" => "bg-blue-500",
-                                        "Advanced" => "bg-purple-500",
-                                        _ => "bg-amber-500",
+                                        "Basics" => "bg-[#4cf490]",
+                                        "Intermediate" => "bg-[#02befa]",
+                                        "Advanced" => "bg-[#a880ff]",
+                                        _ => "bg-[#fbdc8e]",
                                     };
 
                                     rsx! {
@@ -236,7 +236,7 @@ fn App() -> Element {
                                                                 step_idx.set(0);
                                                             },
                                                             if is_done {
-                                                                span { class: "text-emerald-500 mr-1", "✓" }
+                                                                span { class: "text-[#4cf490] mr-1", "\u{2713}" }
                                                             }
                                                             "{ex.title}"
                                                         }
@@ -250,7 +250,7 @@ fn App() -> Element {
                         }
 
                         // Footer
-                        div { class: "mt-auto p-3 border-t border-[#1c2333]",
+                        div { class: "mt-auto p-3 border-t border-[#202126]",
                             div { class: "flex items-center justify-between mb-1",
                                 span { class: "text-[10px] text-zinc-600 tabular-nums", "{completed}/{total} completed" }
                                 if completed > 0 {
@@ -268,7 +268,7 @@ fn App() -> Element {
                             }
                             span { class: "text-[10px] text-zinc-700",
                                 "Powered by "
-                                a { href: "https://github.com/rust-dd", target: "_blank", class: "text-zinc-600 hover:text-emerald-400 transition-colors", "rust-dd" }
+                                a { href: "https://github.com/rust-dd", target: "_blank", class: "text-zinc-600 hover:text-[#4cf490] transition-colors", "rust-dd" }
                             }
                         }
                     }
@@ -290,9 +290,9 @@ fn App() -> Element {
                     // Right panel: exercise catalog or playground
                     div {
                         class: if tab == 0 {
-                            "flex-1 flex flex-col min-h-0 md:flex md:w-[420px] md:max-w-[420px] md:shrink-0 md:flex-none md:border-l md:border-[#1c2333]"
+                            "flex-1 flex flex-col min-h-0 md:flex md:w-[420px] md:max-w-[420px] md:shrink-0 md:flex-none md:border-l md:border-[#202126]"
                         } else {
-                            "hidden md:flex md:w-[420px] md:max-w-[420px] md:shrink-0 md:flex-none md:flex-col md:min-h-0 md:border-l md:border-[#1c2333]"
+                            "hidden md:flex md:w-[420px] md:max-w-[420px] md:shrink-0 md:flex-none md:flex-col md:min-h-0 md:border-l md:border-[#202126]"
                         },
                         if *playground_mode.read() {
                             Playground { session_id }

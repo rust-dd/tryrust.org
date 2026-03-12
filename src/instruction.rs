@@ -28,7 +28,7 @@ fn highlight_rust(code: &str) -> String {
 
         // String literal
         if ch == '"' {
-            result.push_str("<span class=\"text-emerald-400/70\">");
+            result.push_str("<span class=\"text-[#4cf490b3]\">");
             result.push_str("&quot;");
             i += 1;
             while i < len {
@@ -82,17 +82,17 @@ fn highlight_rust(code: &str) -> String {
             }
             // Macro (word!)
             if i < len && chars[i] == '!' {
-                result.push_str("<span class=\"text-blue-400/80\">");
+                result.push_str("<span class=\"text-[#02befacc]\">");
                 result.push_str(&word);
                 result.push('!');
                 result.push_str("</span>");
                 i += 1;
             } else if KEYWORDS.contains(&word.as_str()) {
-                result.push_str("<span class=\"text-purple-400/80\">");
+                result.push_str("<span class=\"text-[#a880ffcc]\">");
                 result.push_str(&word);
                 result.push_str("</span>");
             } else if RUST_TYPES.contains(&word.as_str()) {
-                result.push_str("<span class=\"text-cyan-400/70\">");
+                result.push_str("<span class=\"text-[#00ccb4b3]\">");
                 result.push_str(&word);
                 result.push_str("</span>");
             } else {
@@ -101,7 +101,7 @@ fn highlight_rust(code: &str) -> String {
         }
         // Number
         else if ch.is_ascii_digit() {
-            result.push_str("<span class=\"text-amber-300/90\">");
+            result.push_str("<span class=\"text-[#fbdc8ee6]\">");
             while i < len && (chars[i].is_ascii_digit() || chars[i] == '.' || chars[i] == '_') {
                 result.push(chars[i]);
                 i += 1;
@@ -148,7 +148,7 @@ pub fn Instruction(
     });
 
     rsx! {
-        div { class: "flex flex-col h-full bg-[#0c0f16]",
+        div { class: "flex flex-col h-full bg-[#141416]",
 
             // Scrollable catalog
             div { class: "flex-1 overflow-y-auto",
@@ -162,10 +162,10 @@ pub fn Instruction(
                             .collect();
 
                         let (dot_color, text_color) = match cat_name {
-                            "Basics" => ("bg-emerald-500", "text-emerald-500"),
-                            "Intermediate" => ("bg-blue-500", "text-blue-500"),
-                            "Advanced" => ("bg-purple-500", "text-purple-500"),
-                            _ => ("bg-amber-500", "text-amber-500"),
+                            "Basics" => ("bg-[#4cf490]", "text-[#4cf490]"),
+                            "Intermediate" => ("bg-[#02befa]", "text-[#02befa]"),
+                            "Advanced" => ("bg-[#a880ff]", "text-[#a880ff]"),
+                            _ => ("bg-[#fbdc8e]", "text-[#fbdc8e]"),
                         };
 
                         // Count completed in category
@@ -173,7 +173,7 @@ pub fn Instruction(
                         let cat_total = cat_exercises.len();
 
                         rsx! {
-                            div { class: "border-b border-[#1c2333]",
+                            div { class: "border-b border-[#202126]",
                                 // Category header
                                 div { class: "flex items-center gap-2 px-4 py-2.5",
                                     div { class: "w-2 h-2 rounded-full {dot_color}" }
@@ -209,12 +209,12 @@ pub fn Instruction(
 
                                                         // Status icon
                                                         if is_done {
-                                                            div { class: "w-4 h-4 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0",
-                                                                span { class: "text-[9px] text-emerald-400", "✓" }
+                                                            div { class: "w-4 h-4 rounded-full bg-[#4cf49033] flex items-center justify-center shrink-0",
+                                                                span { class: "text-[9px] text-[#4cf490]", "\u{2713}" }
                                                             }
                                                         } else if is_current {
-                                                            div { class: "w-4 h-4 rounded-full border-2 border-amber-400 shrink-0",
-                                                                div { class: "w-1.5 h-1.5 rounded-full bg-amber-400 m-auto mt-[3px]" }
+                                                            div { class: "w-4 h-4 rounded-full border-2 border-[#fbdc8e] shrink-0",
+                                                                div { class: "w-1.5 h-1.5 rounded-full bg-[#fbdc8e] m-auto mt-[3px]" }
                                                             }
                                                         } else {
                                                             div { class: "w-4 h-4 rounded-full border border-zinc-700 shrink-0" }
@@ -257,7 +257,7 @@ pub fn Instruction(
                                                                         rsx! {
                                                                             div { class: "pl-6 mb-3",
                                                                                 button {
-                                                                                    class: "text-[10px] text-zinc-600 hover:text-blue-400 transition-colors flex items-center gap-1",
+                                                                                    class: "text-[10px] text-zinc-600 hover:text-[#02befa] transition-colors flex items-center gap-1",
                                                                                     onclick: move |_| {
                                                                                         if is_theory_open {
                                                                                             theory_open.set(None);
@@ -266,12 +266,12 @@ pub fn Instruction(
                                                                                         }
                                                                                     },
                                                                                     span { class: "text-[9px]",
-                                                                                        if is_theory_open { "▾" } else { "▸" }
+                                                                                        if is_theory_open { "\u{25be}" } else { "\u{25b8}" }
                                                                                     }
                                                                                     if is_theory_open { "Hide theory" } else { "Theory" }
                                                                                 }
                                                                                 if is_theory_open {
-                                                                                    p { class: "text-[11px] text-zinc-400 leading-relaxed mt-1.5 bg-blue-500/5 rounded px-2.5 py-2 border-l-2 border-blue-500/20 fade-in",
+                                                                                    p { class: "text-[11px] text-zinc-400 leading-relaxed mt-1.5 bg-[#02befa0d] rounded px-2.5 py-2 border-l-2 border-[#02befa33] fade-in",
                                                                                         "{exercise.theory}"
                                                                                     }
                                                                                 }
@@ -304,9 +304,9 @@ pub fn Instruction(
                                                                                         // Step indicator
                                                                                         div { class: "flex flex-col items-center pt-1 shrink-0 w-4",
                                                                                             if done {
-                                                                                                div { class: "w-2 h-2 rounded-full bg-emerald-500/50" }
+                                                                                                div { class: "w-2 h-2 rounded-full bg-[#4cf49080]" }
                                                                                             } else if current {
-                                                                                                div { class: "w-2 h-2 rounded-full bg-amber-400" }
+                                                                                                div { class: "w-2 h-2 rounded-full bg-[#fbdc8e]" }
                                                                                             } else {
                                                                                                 div { class: "w-1.5 h-1.5 rounded-full bg-zinc-700 mt-0.5" }
                                                                                             }
@@ -316,9 +316,9 @@ pub fn Instruction(
                                                                                         div { class: "flex-1 min-w-0",
                                                                                             span {
                                                                                                 class: if done {
-                                                                                                    "text-[11px] text-emerald-500/70 block mb-1"
+                                                                                                    "text-[11px] text-[#4cf490b3] block mb-1"
                                                                                                 } else if current {
-                                                                                                    "text-[11px] text-amber-400/90 font-medium block mb-1"
+                                                                                                    "text-[11px] text-[#fbdc8ee6] font-medium block mb-1"
                                                                                                 } else {
                                                                                                     "text-[11px] text-zinc-600 block mb-1"
                                                                                                 },
@@ -327,9 +327,9 @@ pub fn Instruction(
 
                                                                                             div {
                                                                                                 class: if current {
-                                                                                                    "rounded bg-[#0d1117] hover:bg-[#111822] cursor-pointer transition-colors px-2.5 py-1.5 overflow-x-auto border step-pulse"
+                                                                                                    "rounded bg-[#0d0d0e] hover:bg-[#1e1e1e] cursor-pointer transition-colors px-2.5 py-1.5 overflow-x-auto border step-pulse"
                                                                                                 } else {
-                                                                                                    "rounded bg-[#0d1117] hover:bg-[#111822] cursor-pointer transition-colors px-2.5 py-1.5 overflow-x-auto"
+                                                                                                    "rounded bg-[#0d0d0e] hover:bg-[#1e1e1e] cursor-pointer transition-colors px-2.5 py-1.5 overflow-x-auto"
                                                                                                 },
                                                                                                 onclick: move |_| {
                                                                                                     code_input.set(code.to_string());
@@ -350,7 +350,7 @@ pub fn Instruction(
                                                                                                         rsx! {
                                                                                                             div { class: "mt-1",
                                                                                                                 button {
-                                                                                                                    class: "text-[10px] text-zinc-600 hover:text-amber-400 transition-colors",
+                                                                                                                    class: "text-[10px] text-zinc-600 hover:text-[#fbdc8e] transition-colors",
                                                                                                                     onclick: move |_| {
                                                                                                                         if is_hint_visible {
                                                                                                                             hint_shown.set(None);
@@ -361,7 +361,7 @@ pub fn Instruction(
                                                                                                                     if is_hint_visible { "Hide hint" } else { "? Hint" }
                                                                                                                 }
                                                                                                                 if is_hint_visible {
-                                                                                                                    p { class: "text-[11px] text-amber-400/60 bg-amber-400/5 rounded px-2 py-1 mt-1 fade-in",
+                                                                                                                    p { class: "text-[11px] text-[#fbdc8e99] bg-[#fbdc8e0d] rounded px-2 py-1 mt-1 fade-in",
                                                                                                                         "{hint_text}"
                                                                                                                     }
                                                                                                                 }
@@ -394,7 +394,7 @@ pub fn Instruction(
                 if ex_i >= total {
                     div { class: "p-5",
                         div { class: "flex flex-col gap-4 items-center text-center pt-4 celebrate",
-                            div { class: "text-4xl", "🎉" }
+                            div { class: "text-4xl", "\u{1f389}" }
                             h2 { class: "text-lg font-semibold", "All done!" }
                             p { class: "text-zinc-500 text-[13px] leading-relaxed max-w-[280px]",
                                 "You've completed all exercises. Keep learning:"
@@ -421,8 +421,8 @@ fn LinkItem(href: &'static str, text: &'static str) -> Element {
             href: "{href}",
             target: "_blank",
             rel: "noopener",
-            class: "flex items-center gap-2 text-[13px] text-zinc-500 hover:text-amber-400 transition-colors py-1.5 px-3 rounded hover:bg-white/[0.03]",
-            span { class: "text-zinc-700", "→" }
+            class: "flex items-center gap-2 text-[13px] text-zinc-500 hover:text-[#fbdc8e] transition-colors py-1.5 px-3 rounded hover:bg-white/[0.03]",
+            span { class: "text-zinc-700", "\u{2192}" }
             span { "{text}" }
         }
     }

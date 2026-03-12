@@ -94,7 +94,7 @@ pub fn Terminal(
     let compiling = *is_compiling.read();
 
     rsx! {
-        div { class: "flex flex-col h-full bg-[#08080c]",
+        div { class: "flex flex-col h-full bg-[#060606]",
 
             // Terminal output
             div {
@@ -105,7 +105,7 @@ pub fn Terminal(
                 if history.read().is_empty() {
                     div { class: "flex flex-col gap-2 mb-4 fade-in",
                         div { class: "flex items-center gap-2 mb-1",
-                            span { class: "text-amber-500/80 text-lg font-bold", ">" }
+                            span { class: "text-[#fbdc8ecc] text-lg font-bold", ">" }
                             span { class: "text-zinc-400 font-semibold", "Try Rust" }
                             span { class: "text-zinc-700 text-[11px]", "v1.0" }
                         }
@@ -113,7 +113,7 @@ pub fn Terminal(
                         span { class: "text-zinc-700 text-[12px]", "Click a code snippet on the right, or type below." }
                         div { class: "flex gap-3 mt-1",
                             span { class: "text-zinc-700 text-[11px]", "arrow-up/down history" }
-                            span { class: "text-zinc-800", "·" }
+                            span { class: "text-zinc-800", "\u{00b7}" }
                             span { class: "text-zinc-700 text-[11px]", "\"clear\" to reset" }
                         }
                     }
@@ -123,26 +123,26 @@ pub fn Terminal(
                     match entry {
                         TerminalEntry::Input(t) => rsx! {
                             div { key: "{i}", class: "flex gap-2 py-0.5",
-                                span { class: "text-amber-500/70 select-none shrink-0 font-bold", ">" }
+                                span { class: "text-[#fbdc8eb3] select-none shrink-0 font-bold", ">" }
                                 span { class: "text-zinc-200", "{t}" }
                             }
                         },
                         TerminalEntry::Success(t) => rsx! {
                             div { key: "{i}", class: "flex gap-2 py-0.5",
-                                span { class: "text-emerald-500/70 select-none shrink-0", "~" }
-                                span { class: "text-emerald-400/70", "{t}" }
+                                span { class: "text-[#4cf490b3] select-none shrink-0", "~" }
+                                span { class: "text-[#4cf490b3]", "{t}" }
                             }
                         },
                         TerminalEntry::Error(t) => rsx! {
                             div { key: "{i}", class: "flex gap-2 py-0.5",
-                                span { class: "text-red-500/70 select-none shrink-0", "!" }
-                                span { class: "text-red-400/70", "{t}" }
+                                span { class: "text-[#ff4c4cb3] select-none shrink-0", "!" }
+                                span { class: "text-[#ff4c4cb3]", "{t}" }
                             }
                         },
                         TerminalEntry::System(t) => rsx! {
                             div { key: "{i}", class: "flex gap-2 py-0.5 celebrate",
-                                span { class: "text-amber-400/70 select-none shrink-0", "*" }
-                                span { class: "text-amber-300/80 font-medium", "{t}" }
+                                span { class: "text-[#fbdc8eb3] select-none shrink-0", "*" }
+                                span { class: "text-[#fbdc8ecc] font-medium", "{t}" }
                             }
                         },
                     }
@@ -151,7 +151,7 @@ pub fn Terminal(
 
             // Input bar
             div { class: "flex items-center gap-2 px-4 py-2.5 border-t border-white/[0.06] bg-white/[0.02]",
-                span { class: "text-amber-500/60 font-mono text-sm select-none shrink-0 font-bold", ">" }
+                span { class: "text-[#fbdc8e99] font-mono text-sm select-none shrink-0 font-bold", ">" }
                 input {
                     id: "code-input",
                     r#type: "text",
@@ -159,7 +159,7 @@ pub fn Terminal(
                     spellcheck: "false",
                     autofocus: true,
                     disabled: compiling,
-                    class: "flex-1 bg-transparent outline-none text-zinc-200 font-mono text-[13px] placeholder:text-zinc-700 caret-amber-400",
+                    class: "flex-1 bg-transparent outline-none text-zinc-200 font-mono text-[13px] placeholder:text-zinc-700 caret-[#fbdc8e]",
                     placeholder: if compiling { "Compiling..." } else { "Type Rust code..." },
                     value: "{code_input}",
                     oninput: move |e| { code_input.set(e.value()); },
@@ -206,7 +206,7 @@ pub fn Terminal(
                     },
                 }
                 if compiling {
-                    div { class: "w-3.5 h-3.5 border-[1.5px] border-amber-500/30 border-t-amber-400 rounded-full animate-spin shrink-0" }
+                    div { class: "w-3.5 h-3.5 border-[1.5px] border-[#fbdc8e4d] border-t-[#fbdc8e] rounded-full animate-spin shrink-0" }
                 }
             }
         }
